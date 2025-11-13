@@ -12,7 +12,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            Keranjang
+            Transaksi
         </a>
     </div>
 
@@ -22,15 +22,15 @@
                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
     </div>
 
+
+
+
+
     <!-- Grid card obat - Lebih compact -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div class=" gap-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         <?php foreach($obat as $o): ?>
-        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 overflow-hidden group border border-gray-100">
-            <!-- Icon/Image Placeholder - Lebih kecil -->
-            <div class="bg-gradient-to-br from-teal-500 to-teal-600 h-20 flex items-center justify-center group-hover:from-teal-600 group-hover:to-teal-700 transition-colors">
-                
-            </div>
-            
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transform transition-all hover:-translate-y-2 duration-300 group border border-gray-100">
+        
             <!-- Card Content - Lebih compact -->
             <div class="p-3">
                 <h2 class="text-sm font-bold text-gray-800 mb-2 line-clamp-2 h-10">
@@ -39,9 +39,10 @@
                 
                 <!-- Stok -->
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs text-gray-500">Stok:</span>
+                    <span class="text-xs text-gray-500">Stok:
                     <span class="<?= $o['stok'] < 10 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?> px-2 py-0.5 rounded-full text-xs font-semibold">
                         <?= $o['stok'] ?>
+                    </span>
                     </span>
                 </div>
                 
@@ -61,6 +62,10 @@
         </div>
         <?php endforeach; ?>
     </div>
+
+
+    
+
 
     <!-- Empty State -->
     <?php if(empty($obat)): ?>

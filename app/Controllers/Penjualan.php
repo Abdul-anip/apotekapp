@@ -56,15 +56,6 @@ class Penjualan extends Controller
         return redirect()->to('/penjualan')->with('success', 'Obat berhasil ditambahkan ke keranjang.');
     }
 
-    // 🟢 Hapus item dari keranjang
-    public function remove($id_obat)
-    {
-        $cart = $this->session->get('cart') ?? [];
-        unset($cart[$id_obat]);
-        $this->session->set('cart', $cart);
-
-        return redirect()->to('/penjualan')->with('success', 'Obat berhasil dihapus dari keranjang.');
-    }
 
     // 🟢 Lanjut ke transaksi
     public function checkout()

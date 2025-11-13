@@ -15,7 +15,6 @@ $routes->get('/obat/delete/(:num)', 'Obat::delete/$1');
 
 $routes->get('/penjualan', 'Penjualan::index');
 $routes->get('/penjualan/add/(:num)', 'Penjualan::add/$1');
-$routes->get('/penjualan/remove/(:num)', 'Penjualan::remove/$1');
 $routes->get('/penjualan/checkout', 'Penjualan::checkout');
 
 
@@ -32,4 +31,9 @@ $routes->get('/kategori/delete/(:num)', 'Kategori::delete/$1');
 
 $routes->get('/transaksi', 'Transaksi::index'); // tampilkan halaman transaksi
 $routes->post('/transaksi/store', 'Transaksi::store'); // simpan transaksi ke database
+$routes->get('/transaksi/remove/(:num)', 'Transaksi::remove/$1');
+$routes->post('/transaksi/updateQuantity', 'Transaksi::updateQuantity');
+$routes->post('/transaksi/proses', 'Transaksi::proses');
+$routes->post('/transaksi/hitungKembalian', 'Transaksi::hitungKembalian');
+
 

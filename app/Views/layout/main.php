@@ -3,6 +3,8 @@
 <head>
     <title><?= $title ?? 'POS Apotek' ?></title>
     <link href="/css/tailwind.css" rel="stylesheet">
+    <link href="<?= base_url('css/output.css') ?>" rel="stylesheet">
+
 </head>
 <body class="bg-gray-100 min-h-screen">
 
