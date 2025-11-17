@@ -20,7 +20,7 @@ $routes->get('/penjualan/checkout', 'Penjualan::checkout');
 
 
 $routes->get('/laporan', 'Laporan::index');
-$routes->get('/laporan/detail/(:num)', 'Laporan::detail/$1');
+
 
 $routes->get('/kategori', 'Kategori::index');
 $routes->get('/kategori/create', 'Kategori::create');

@@ -7,21 +7,18 @@ use CodeIgniter\Model;
 class LaporanTransaksiModel extends Model
 {
     protected $table            = 'laporan_transaksi';
-    protected $primaryKey       = 'id_laporan';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-
+    protected $primaryKey       = 'id';
     protected $allowedFields    = [
-        'id_transaksi',
+        'kode_transaksi',
         'total_harga',
-        'uang_dibayar',
-        'uang_kembalian',
-        'tanggal_transaksi',
-        'created_at',
-        'updated_at',
+        'bayar',
+        'kembalian',
+        'items',
+        'tanggal_transaksi'
     ];
 
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    public function getLaporan()
+    {
+        return $this->orderBy('id', 'DESC')->findAll();
+    }
 }

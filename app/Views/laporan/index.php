@@ -1,33 +1,42 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<h1 class="text-3xl font-bold mb-4"><?= $title ?></h1>
+<div class="max-w-7xl mx-auto">
+
+<h1 class="text-3xl font-bold mb-4">Laporan Transaksi</h1>
 
 <table class="min-w-full bg-white shadow rounded">
     <thead class="bg-gray-100">
-        <tr class="text-center">
-            <th class="py-2 px-4 border">ID Transaksi</th>
-            <th class="py-2 px-4 border">Tanggal</th>
-            <th class="py-2 px-4 border">Total</th>
-            <th class="py-2 px-4 border">Aksi</th>
+        <tr>
+            <th class="py-2 px-4 border">Kode Transaksi</th>
+            <th class="py-2 px-4 border">Total Belanja</th>
+            <th class="py-2 px-4 border">Bayar</th>
+            <th class="py-2 px-4 border">Kembalian</th>
+            <th class="py-2 px-4 border">Barang Dibeli</th>
         </tr>
     </thead>
     <tbody>
-        <?php if(empty($transaksi)): ?>
-            <tr><td colspan="4" class="text-center py-4">Belum ada transaksi</td></tr>
-        <?php else: ?>
-            <?php foreach($transaksi as $t): ?>
+        <?php foreach ($laporan as $row): ?>
             <tr class="text-center">
-                <td class="py-2 px-4 border"><?= $t['id_transaksi'] ?></td>
-                <td class="py-2 px-4 border"><?= $t['tanggal'] ?></td>
-                <td class="py-2 px-4 border">Rp <?= $t['total'] ?></td>
+                <td class="py-2 px-4 border"><?= $row['kode_transaksi'] ?></td>
+                <td class="py-2 px-4 border">Rp <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+                <td class="py-2 px-4 border">Rp <?= number_format($row['bayar'], 0, ',', '.') ?></td>
+                <td class="py-2 px-4 border">Rp <?= number_format($row['kembalian'], 0, ',', '.') ?></td>
                 <td class="py-2 px-4 border">
-                    <a href="/laporan/detail/<?= $t['id_transaksi'] ?>" class="bg-teal-600 px-2 py-1 rounded text-white hover:bg-teal-700">Detail</a>
+                    <ul class="text-center">
+                        <?php foreach ($row['items'] as $item): ?>
+                            <li>
+                                <?= $item['nama_obat'] ?> -
+                                <?= $item['jumlah'] ?> ×
+                                Rp <?= number_format($item['harga_jual'], 0, ',', '.') ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
                 </td>
             </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 
 <?= $this->endSection() ?>

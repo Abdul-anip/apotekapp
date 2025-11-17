@@ -11,6 +11,18 @@
         </a>
     </div>
 
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
         <!-- ===================== KIRI: RINGKASAN TOTAL ===================== -->
         <div class="bg-white border border-green-500 rounded-xl p-4 flex flex-col justify-between shadow-sm">
@@ -30,10 +42,10 @@
                                     Rp <?= number_format($item['subtotal'], 0, ',', '.') ?>
                                 </div>
                                 <div class="flex justify-end items-center gap-2 mt-2">
-                                    <button class="bg-gray-200 hover:bg-gray-300 px-2 rounded text-sm btn-minus" data-id="<?= $item['id_obat'] ?>">-</button>
+                                    <button type="button" class="bg-gray-200 hover:bg-gray-300 px-2 rounded text-sm btn-minus" data-id="<?= $item['id_obat'] ?>">-</button>
                                     <span id="jumlah-<?= $item['id_obat'] ?>" class="font-semibold"><?= $item['jumlah'] ?></span>
-                                    <button class="bg-gray-200 hover:bg-gray-300 px-2 rounded text-sm btn-plus" data-id="<?= $item['id_obat'] ?>">+</button>
-                                    <a href="/transaksi/remove/<?= $item['id_obat'] ?>" class="text-red-500 hover:text-red-700">🗑️</a>
+                                    <button type="button" class="bg-gray-200 hover:bg-gray-300 px-2 rounded text-sm btn-plus" data-id="<?= $item['id_obat'] ?>">+</button>
+                                    <a href="/transaksi/remove/<?= $item['id_obat'] ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Hapus item ini?')">🗑️</a>
                                 </div>
                             </div>
                         </div>
@@ -45,60 +57,58 @@
         </div>
 
         <!-- ===================== KANAN: FORM PEMBAYARAN ===================== -->
-    <div class="bg-white border border-green-500 rounded-xl p-4 shadow-sm flex flex-col justify-between">
-        
-
-        <form action="/transaksi/proses" method="post" class="flex flex-col gap-3">
-            <div>
-                <label class="block text-sm font-semibold text-gray-700">Bayar</label>
-                <input id="bayar" name="bayar" type="text"
-                    class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-green-500"
-                    placeholder="Isi nominal uang pelanggan">
-            </div>
-
-            <div class="space-y-3">
-                <div class="flex justify-between items-center border-t pt-3">
-                    <span class="font-semibold text-gray-700 total-qty">
-                        Total <?= $total_qty ?> Qty
-                    </span>
-                    <span class="text-red-600 font-bold text-lg total-text">
-                        Rp <?= number_format($total, 0, ',', '.') ?>
-                    </span>
+        <div class="bg-white border border-green-500 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+            <form action="/transaksi/proses" method="post" id="formBayar" class="flex flex-col gap-3">
+                <?= csrf_field() ?>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Bayar</label>
+                    <input id="bayar-display" type="text" 
+                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-green-500"
+                        placeholder="Isi nominal uang pelanggan"
+                        autocomplete="off">
+                    <!-- Hidden input untuk nilai sebenarnya tanpa format -->
+                    <input type="hidden" id="bayar-real" name="bayar" value="">
                 </div>
-            </div>
 
-            <!-- ===== Bagian bawah sekarang menampilkan KEMBALIAN ===== -->
-            <div class="text-black rounded-lg p-5 mb-4 text-center bg-cyan-50 border border-cyan-300">
-                <span class="text-lg font-semibold block text-gray-700 mb-1">KEMBALIAN</span>
-                <div class="text-3xl font-bold text-green-700 kembali-total">Rp 0</div>
-                <input type="hidden" name="kembali" id="kembali-input" value="0">
-            </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-t pt-3">
+                        <span class="font-semibold text-gray-700 total-qty">
+                            Total <?= $total_qty ?> Qty
+                        </span>
+                        <span class="text-red-600 font-bold text-lg total-text" data-total="<?= $total ?>">
+                            Rp <?= number_format($total, 0, ',', '.') ?>
+                        </span>
+                    </div>
+                </div>
 
-            <div class="flex justify-between items-center pt-4">
-                <button type="submit"
-                    class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 mb-4 inline-block">
-                    BAYAR
-                </button>
-            </div>
-        </form>
-    </div>
+                <!-- Kembalian Display -->
+                <div class="text-black rounded-lg p-5 mb-4 text-center bg-cyan-50 border border-cyan-300">
+                    <span class="text-lg font-semibold block text-gray-700 mb-1">KEMBALIAN</span>
+                    <div class="text-3xl font-bold text-green-700 kembali-total">Rp 0</div>
+                </div>
 
-
-
+                <div class="flex justify-between items-center pt-4">
+                    <button type="submit" id="btnBayar"
+                        class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 mb-4 inline-block w-full font-semibold">
+                        BAYAR
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- ===================== SCRIPT AJAX ===================== -->
+<!-- ===================== SCRIPT UNIFIED ===================== -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const csrfToken = '<?= csrf_hash() ?>';
-
+    // ============ UPDATE QUANTITY ============
     document.querySelectorAll('.cart-item').forEach(item => {
         const id = item.dataset.id;
         const minus = item.querySelector('.btn-minus');
         const plus = item.querySelector('.btn-plus');
-        const jumlahEl = item.querySelector(`#jumlah-${id}`); // span di tombol
-        const jumlahText = item.querySelector('.jumlah-text'); // span di kiri
+        const jumlahEl = item.querySelector(`#jumlah-${id}`);
+        const jumlahText = item.querySelector('.jumlah-text');
         const subtotalText = item.querySelector('.subtotal-text');
 
         const updateServer = (jumlah) => {
@@ -110,25 +120,29 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Update semua tampilan yang relevan
                     jumlahEl.textContent = jumlah;
-                    jumlahText.textContent = jumlah; // update di bagian kiri
-                    subtotalText.textContent = 'Rp ' + data.subtotal.toLocaleString('id-ID');
-                    document.querySelector('.total-text').textContent = 'Rp ' + data.total.toLocaleString('id-ID');
-                    document.querySelector('.grand-total').textContent = 'Rp ' + data.total.toLocaleString('id-ID');
-                    document.querySelector('.total-harga').textContent = 'Rp ' + data.total.toLocaleString('id-ID');
+                    jumlahText.textContent = jumlah;
+                    subtotalText.textContent = 'Rp ' + data.subtotal;
+                    
+                    // Update total
+                    const totalEl = document.querySelector('.total-text');
+                    totalEl.textContent = 'Rp ' + data.total;
+                    totalEl.dataset.total = data.total.replace(/\./g, ''); // simpan nilai numerik
+                    
+                    // Recalculate kembalian
+                    hitungKembalian();
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error('Error updating quantity:', err));
         };
 
-        plus.addEventListener('click', () => {
+        plus?.addEventListener('click', () => {
             let jumlah = parseInt(jumlahEl.textContent);
             jumlah++;
             updateServer(jumlah);
         });
 
-        minus.addEventListener('click', () => {
+        minus?.addEventListener('click', () => {
             let jumlah = parseInt(jumlahEl.textContent);
             if (jumlah > 1) {
                 jumlah--;
@@ -136,67 +150,72 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-});
-</script>
 
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const inputBayar = document.querySelector('input[name="bayar"]');
+    // ============ INPUT BAYAR & KEMBALIAN ============
+    const inputBayarDisplay = document.getElementById('bayar-display');
+    const inputBayarReal = document.getElementById('bayar-real');
     const kembaliDisplay = document.querySelector('.kembali-total');
-    const kembaliHidden = document.querySelector('#kembali-input');
-    const totalHarga = <?= $total ?>;
-
-    if (inputBayar) {
-        inputBayar.addEventListener('input', () => {
-            const bayar = parseFloat(inputBayar.value) || 0;
-            const kembalian = bayar - totalHarga;
-            const hasil = kembalian > 0 ? kembalian : 0;
-
-            // update tampilan besar
-            kembaliDisplay.textContent = 'Rp ' + hasil.toLocaleString('id-ID');
-            // simpan ke input hidden (untuk dikirim ke server saat "Bayar")
-            kembaliHidden.value = hasil;
-        });
-    }
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const inputBayar = document.getElementById('bayar');
-    const kembaliDisplay = document.querySelector('.kembali-total');
-    const kembaliHidden = document.querySelector('#kembali-input');
-    const totalHarga = <?= $total ?>; // total harga dari PHP
-
-    // Fungsi bantu untuk format angka ke format ribuan (5.000)
+    const totalEl = document.querySelector('.total-text');
+    
+    // Format rupiah
     function formatRupiah(angka) {
         return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    // Fungsi bantu untuk hapus titik dari input
+    // Parse rupiah ke number
     function parseRupiah(str) {
-        return parseFloat(str.replace(/\./g, "")) || 0;
+        return parseFloat(str.replace(/\./g, "").replace(/,/g, "")) || 0;
     }
 
-    inputBayar.addEventListener("input", (e) => {
-        let nilai = e.target.value.replace(/\D/g, ""); // hanya angka
-        e.target.value = formatRupiah(nilai); // tampilkan dengan titik
-
-        const bayar = parseRupiah(e.target.value);
+    // Hitung kembalian
+    function hitungKembalian() {
+        const totalHarga = parseFloat(totalEl.dataset.total) || 0;
+        const bayar = parseRupiah(inputBayarDisplay.value);
         const kembalian = bayar - totalHarga;
         const hasil = kembalian > 0 ? kembalian : 0;
 
-        // tampilkan hasil kembalian
         kembaliDisplay.textContent = 'Rp ' + hasil.toLocaleString('id-ID');
-        kembaliHidden.value = hasil;
-    });
+        inputBayarReal.value = bayar; // simpan nilai asli tanpa format
+    }
+
+    // Event input bayar
+    if (inputBayarDisplay) {
+        inputBayarDisplay.addEventListener('input', (e) => {
+            let nilai = e.target.value.replace(/\D/g, ""); // hanya angka
+            e.target.value = formatRupiah(nilai);
+            hitungKembalian();
+        });
+    }
+
+    // ============ FORM VALIDATION ============
+    const formBayar = document.getElementById('formBayar');
+    if (formBayar) {
+        formBayar.addEventListener('submit', (e) => {
+            const bayar = parseFloat(inputBayarReal.value) || 0;
+            const total = parseFloat(totalEl.dataset.total) || 0;
+
+            if (bayar <= 0) {
+                e.preventDefault();
+                alert('Harap isi jumlah bayar!');
+                inputBayarDisplay.focus();
+                return false;
+            }
+
+            if (bayar < total) {
+                e.preventDefault();
+                alert('Uang bayar kurang! Total: Rp ' + total.toLocaleString('id-ID'));
+                inputBayarDisplay.focus();
+                return false;
+            }
+
+            // Konfirmasi
+            if (!confirm('Proses transaksi dengan total Rp ' + total.toLocaleString('id-ID') + '?')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
 });
 </script>
-
-
-
-
-
 
 <?= $this->endSection() ?>
