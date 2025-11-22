@@ -44,28 +44,7 @@
         </div>
     </div>
 
-    <!-- 🔴 Legend -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-5">
-        <h4 class="font-semibold text-blue-800 mb-2">🔖 Keterangan Status:</h4>
-        <div class="flex flex-wrap gap-4 text-sm">
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 bg-red-600 rounded"></span>
-                <span class="text-gray-700">Sudah Kadaluarsa</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 bg-orange-500 rounded"></span>
-                <span class="text-gray-700">Akan Kadaluarsa (&lt; 30 hari)</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 bg-yellow-500 rounded"></span>
-                <span class="text-gray-700">Perhatian (&lt; 60 hari)</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 bg-green-500 rounded"></span>
-                <span class="text-gray-700">Aman</span>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Table -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -90,12 +69,17 @@
                     $tglED = strtotime($o['tanggal_kadaluarsa']);
                     $diffDays = ceil(($tglED - $today) / (60 * 60 * 24));
                     
-                    // Tentukan status kadaluarsa
-                    if ($diffDays < 0) {
+                    // menentukan status kadaluarsa
+                    if ($diffDays < 1) {
                         $statusClass = 'bg-red-600 text-white';
                         $statusText = 'KADALUARSA';
                         $statusFilter = 'expired';
-                    } elseif ($diffDays <= 30) {
+                    } elseif ($diffDays == 1 ) {
+                        $statusClass = 'bg-red-600 text-white';
+                        $statusText = 'KADALUARSA HARI INI';
+                        $statusFilter = 'expired';
+                    }
+                     elseif ($diffDays <= 30) {
                         $statusClass = 'bg-orange-500 text-white';
                         $statusText = $diffDays . ' hari lagi';
                         $statusFilter = 'soon';
@@ -136,7 +120,7 @@
                         </span>
                     </td>
                     <td class="py-3 px-4 text-center text-sm">
-                        <div class="<?= $diffDays < 0 ? 'text-red-700 font-bold' : 'text-gray-600' ?>">
+                        <div class="<?= $diffDays < 2 ? 'text-red-700 font-bold' : 'text-gray-600' ?>">
                             <?= date('d M Y', strtotime($o['tanggal_kadaluarsa'])) ?>
                         </div>
                     </td>
@@ -164,8 +148,145 @@
     </div>
 </div>
 
-<!-- Modal Tambah & Edit (sama seperti sebelumnya) -->
-<!-- ... (gunakan modal yang sudah ada) ... -->
+<!--  Modal Tambah Obat -->
+<div id="modalTambah" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="bg-teal-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="text-xl font-bold">Tambah Obat Baru</h3>
+            <button onclick="closeModalTambah()" class="text-white hover:text-gray-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form action="/obat/store" method="post" class="p-6">
+            <?= csrf_field() ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Obat *</label>
+                    <input type="text" name="nama_obat" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Merk Obat *</label>
+                    <input type="text" name="merk" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori *</label>
+                    <select name="category_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">-- Pilih Kategori --</option>
+                        <?php foreach ($kategori as $k): ?>
+                            <option value="<?= $k['id'] ?>"><?= $k['nama_kategori'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Stok *</label>
+                    <input type="number" name="stok" required min="0"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Beli *</label>
+                    <input type="number" name="harga_beli" required min="0"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Jual *</label>
+                    <input type="number" name="harga_jual" required min="0"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Kadaluarsa *</label>
+                    <input type="date" name="tanggal_kadaluarsa" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button type="submit" class="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition font-semibold">
+                    Simpan
+                </button>
+                <button type="button" onclick="closeModalTambah()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--  Modal Edit Obat -->
+<div id="modalEdit" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="bg-yellow-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="text-xl font-bold">Edit Obat</h3>
+            <button onclick="closeModalEdit()" class="text-white hover:text-gray-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="formEdit" method="post" class="p-6">
+            <?= csrf_field() ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Obat *</label>
+                    <input type="text" name="nama_obat" id="edit_nama_obat" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Merk Obat *</label>
+                    <input type="text" name="merk" id="edit_merk" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori *</label>
+                    <select name="category_id" id="edit_category_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                        <option value="">-- Pilih Kategori --</option>
+                        <?php foreach ($kategori as $k): ?>
+                            <option value="<?= $k['id'] ?>"><?= $k['nama_kategori'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Stok *</label>
+                    <input type="number" name="stok" id="edit_stok" required min="0"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Beli *</label>
+                    <input type="number" name="harga_beli" id="edit_harga_beli" required min="0"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Jual *</label>
+                    <input type="number" name="harga_jual" id="edit_harga_jual" required min="0"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Kadaluarsa *</label>
+                    <input type="date" name="tanggal_kadaluarsa" id="edit_tanggal_kadaluarsa" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button type="submit" class="flex-1 bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700 transition font-semibold">
+                    Update
+                </button>
+                <button type="button" onclick="closeModalEdit()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+ 
 
 <script>
 // Modal Functions (sama seperti sebelumnya)

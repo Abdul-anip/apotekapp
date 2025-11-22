@@ -55,14 +55,14 @@
                 <!-- Badge Stok -->
                 <?php if($o['stok'] < 10): ?>
                     <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold z-10">
-                        Stok Rendah!
+                        Stok menipis!
                     </div>
                 <?php endif; ?>
 
                 <!-- Card Content -->
                 <div class="p-4">
                     <!-- Nama Obat -->
-                    <h2 class="text-sm font-bold text-gray-800 mb-2 line-clamp-2 h-10">
+                    <h2 class="text-sm font-bold text-gray-800 mb-2 line-clamp-2 h-10 mt-4">
                         <?= esc($o['nama_obat']) ?>
                     </h2>
                     

@@ -79,7 +79,7 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <h3 class="text-lg font-bold text-red-800 mb-1">⚠️ Obat Kadaluarsa!</h3>
+                <h3 class="text-lg font-bold text-red-800 mb-1">Obat Kadaluarsa!</h3>
                 <p class="text-red-700 text-sm">
                     <span class="font-bold text-2xl"><?= $obatSudahKadaluarsa ?></span> obat sudah melewati tanggal kadaluarsa
                 </p>
