@@ -31,6 +31,7 @@ class Obat extends BaseController
     {
         $this->obat->save([
             'nama_obat' => $this->request->getPost('nama_obat'),
+            'merk' => $this->request->getPost('merk'),
             'category_id' => $this->request->getPost('category_id'),
             'harga_beli' => $this->request->getPost('harga_beli'),
             'harga_jual' => $this->request->getPost('harga_jual'),
@@ -45,6 +46,7 @@ class Obat extends BaseController
     {
         $this->obat->update($id, [
             'nama_obat' => $this->request->getPost('nama_obat'),
+            'merk' => $this->request->getPost('merk'),
             'category_id' => $this->request->getPost('category_id'),
             'harga_beli' => $this->request->getPost('harga_beli'),
             'harga_jual' => $this->request->getPost('harga_jual'),

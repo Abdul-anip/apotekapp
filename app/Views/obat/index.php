@@ -27,7 +27,7 @@
     <!-- Filter & Search -->
     <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
         <div class="flex gap-4">
-            <input type="text" id="searchObat" placeholder="🔍 Cari nama obat..." 
+            <input type="text" id="searchObat" placeholder="🔍 Cari nama barang..." 
                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
             <select id="filterKategori" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
                 <option value="">Semua Kategori</option>
@@ -43,7 +43,8 @@
         <table class="min-w-full">
             <thead class="bg-gradient-to-r from-teal-600 to-teal-700 text-white">
                 <tr>
-                    <th class="py-3 px-4 text-left">Nama Obat</th>
+                    <th class="py-3 px-4 text-left">Nama Barang</th>
+                    <th class="py-3 px-4 text-left">Merk</th>
                     <th class="py-3 px-4 text-left">Kategori</th>
                     <th class="py-3 px-4 text-right">Harga Beli</th>
                     <th class="py-3 px-4 text-right">Harga Jual</th>
@@ -53,12 +54,20 @@
                 </tr>
             </thead>
             <tbody id="tableBody">
-                <?php foreach($obat as $o): ?>
+                <?php foreach($obat as $o): 
+
+                    $tglED = strtotime($o['tanggal_kadaluarsa']);
+                    $today = time();
+                    $diffDays = ceil(($tglED - $today) / (60 * 60 * 24)); // Hitung selisih hari
+                    ?>
                 <tr class="border-b hover:bg-gray-50 transition obat-row" 
                     data-nama="<?= strtolower($o['nama_obat']) ?>"
                     data-kategori="<?= $o['nama_kategori'] ?: '' ?>">
                     <td class="py-3 px-4">
                         <div class="font-semibold text-gray-800"><?= esc($o['nama_obat']) ?></div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="font-semibold text-gray-800"><?= esc($o['merk']) ?></div>
                     </td>
                     <td class="py-3 px-4">
                         <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
@@ -113,8 +122,13 @@
             <?= csrf_field() ?>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Obat *</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Barang *</label>
                     <input type="text" name="nama_obat" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Merk Obat *</label>
+                    <input type="text" name="merk" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
                 <div>
@@ -174,8 +188,13 @@
             <?= csrf_field() ?>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Obat *</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Barang *</label>
                     <input type="text" name="nama_obat" id="edit_nama_obat" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Merk Obat *</label>
+                    <input type="text" name="merk" id="edit_merk" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
                 </div>
                 <div>
@@ -232,6 +251,7 @@ function closeModalTambah() {
 
 function openModalEdit(obat) {
     document.getElementById('edit_nama_obat').value = obat.nama_obat;
+    document.getElementById('edit_merk').value = obat.merk;
     document.getElementById('edit_category_id').value = obat.category_id;
     document.getElementById('edit_harga_beli').value = obat.harga_beli;
     document.getElementById('edit_harga_jual').value = obat.harga_jual;

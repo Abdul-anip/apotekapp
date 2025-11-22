@@ -11,12 +11,14 @@ class ObatModel extends Model
     
     protected $allowedFields = [
         'nama_obat',
+        'merk',
         'category_id',
         'harga_beli',
         'harga_jual',
         'stok',
         'tanggal_kadaluarsa'
     ];
+    
     
     protected $useTimestamps = false;
 }
