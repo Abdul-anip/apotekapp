@@ -11,6 +11,7 @@ class LaporanTransaksiModel extends Model
     protected $allowedFields    = [
         'kode_transaksi',
         'total_harga',
+        'id_transaksi',
         'keuntungan', // 🟢 TAMBAHAN
         'bayar',
         'kembalian',

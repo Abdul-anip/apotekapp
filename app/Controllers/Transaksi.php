@@ -191,6 +191,7 @@ class Transaksi extends Controller
             // 🟢 Simpan laporan dengan keuntungan
             $laporanData = [
                 'kode_transaksi' => $kode_transaksi,
+                'id_transaksi'   => $transaksi_id,
                 'total_harga'    => $total,
                 'keuntungan'     => $total_keuntungan, // 🟢 TAMBAHAN
                 'bayar'          => $bayar,

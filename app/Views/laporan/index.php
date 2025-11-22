@@ -29,6 +29,7 @@
     <thead class="bg-gray-100">
         <tr>
             <th class="py-2 px-4 border">Kode Transaksi</th>
+            <th class="py-2 px-4 border">Id Transaksi</th>
             <th class="py-2 px-4 border">Total Belanja</th>
             <th class="py-2 px-4 border">🟢 Keuntungan</th>
             <th class="py-2 px-4 border">Bayar</th>
@@ -40,6 +41,7 @@
         <?php foreach ($laporan as $row): ?>
             <tr class="text-center">
                 <td class="py-2 px-4 border"><?= $row['kode_transaksi'] ?></td>
+                <td class="py-2 px-4 border"><?= $row['id_transaksi'] ?></td>
                 <td class="py-2 px-4 border">Rp <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
                 <td class="py-2 px-4 border">
                     <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">

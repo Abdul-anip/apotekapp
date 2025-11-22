@@ -1,29 +1,282 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<h1 class="text-3xl font-bold mb-4"><?= $title ?></h1>
+<div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800"><?= $title ?></h1>
+            <p class="text-sm text-gray-600 mt-1">Kelola kategori obat di apotek</p>
+        </div>
+        <button onclick="openModalTambah()" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition shadow-md flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Kategori
+        </button>
+    </div>
 
-<a href="/kategori/create" class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 mb-4 inline-block">Tambah Kategori</a>
+    <!-- Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
 
-<table class="min-w-full bg-white shadow rounded">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="py-2 px-4 border">Nama Kategori</th>
-            <th class="py-2 px-4 border">Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($kategori as $o): ?>
-        <tr class="text-center">
-            <td class="py-2 px-4 border"><?= $o['nama_kategori'] ?></td>
-            <td class="py-2 px-4 border">
-                <a href="/kategori/edit/<?= $o['id'] ?>" class="bg-yellow-500 px-2 py-1 rounded text-white hover:bg-yellow-600">Edit</a>
-                <a href="/kategori/delete/<?= $o['id'] ?>" class="bg-red-500 px-2 py-1 rounded text-white hover:bg-red-600"
-                   onclick="return confirm('Yakin ingin hapus?')">Hapus</a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+    <!-- Search Bar -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
+        <input type="text" id="searchKategori" placeholder="🔍 Cari kategori..." 
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="min-w-full">
+            <thead class="bg-gradient-to-r from-teal-600 to-teal-700 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left w-16">No</th>
+                    <th class="py-3 px-4 text-left">Nama Kategori</th>
+                    <th class="py-3 px-4 text-center w-48">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <?php if (empty($kategori)): ?>
+                    <tr>
+                        <td colspan="3" class="py-12 text-center">
+                            <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                            <p class="text-gray-500">Belum ada kategori</p>
+                            <button onclick="openModalTambah()" class="mt-3 text-teal-600 hover:text-teal-700 font-medium">
+                                + Tambah Kategori Pertama
+                            </button>
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <?php $no = 1; foreach($kategori as $k): ?>
+                    <tr class="border-b hover:bg-gray-50 transition kategori-row" data-nama="<?= strtolower($k['nama_kategori']) ?>">
+                        <td class="py-3 px-4 text-gray-600"><?= $no++ ?></td>
+                        <td class="py-3 px-4">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-teal-100 p-2 rounded-lg">
+                                    <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                    </svg>
+                                </div>
+                                <span class="font-semibold text-gray-800"><?= esc($k['nama_kategori']) ?></span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="flex gap-2 justify-center">
+                                <button onclick='openModalEdit(<?= json_encode($k) ?>)' 
+                                        class="bg-yellow-500 text-white px-3 py-1.5 rounded-lg hover:bg-yellow-600 transition text-sm flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button onclick="confirmDelete(<?= $k['id'] ?>, '<?= esc($k['nama_kategori']) ?>')" 
+                                        class="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition text-sm flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Info Card -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div>
+                <h4 class="font-semibold text-blue-800">Tips</h4>
+                <p class="text-sm text-blue-700">Kategori digunakan untuk mengelompokkan obat. Pastikan nama kategori jelas dan mudah dikenali.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Kategori -->
+<div id="modalTambah" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 transform transition-all">
+        <div class="bg-gradient-to-r from-teal-600 to-teal-700 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="text-xl font-bold flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Kategori Baru
+            </h3>
+            <button onclick="closeModalTambah()" class="text-white hover:text-gray-200 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form action="/kategori/store" method="post" class="p-6">
+            <?= csrf_field() ?>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Nama Kategori <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="nama_kategori" id="tambah_nama_kategori" required
+                       placeholder="Contoh: Obat Batuk, Vitamin, dll"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button type="submit" class="flex-1 bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Simpan
+                </button>
+                <button type="button" onclick="closeModalTambah()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Kategori -->
+<div id="modalEdit" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 transform transition-all">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="text-xl font-bold flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Edit Kategori
+            </h3>
+            <button onclick="closeModalEdit()" class="text-white hover:text-gray-200 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="formEdit" method="post" class="p-6">
+            <?= csrf_field() ?>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Nama Kategori <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="nama_kategori" id="edit_nama_kategori" required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button type="submit" class="flex-1 bg-yellow-500 text-white py-3 rounded-lg hover:bg-yellow-600 transition font-semibold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Update
+                </button>
+                <button type="button" onclick="closeModalEdit()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="modalHapus" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all">
+        <div class="p-6 text-center">
+            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Hapus Kategori?</h3>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus kategori "<span id="hapus_nama" class="font-semibold text-red-600"></span>"?</p>
+            <div class="flex gap-3">
+                <button onclick="closeModalHapus()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+                <a id="hapus_link" href="#" class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition font-semibold text-center">
+                    Ya, Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Modal Tambah
+function openModalTambah() {
+    document.getElementById('modalTambah').classList.remove('hidden');
+    document.getElementById('tambah_nama_kategori').focus();
+}
+
+function closeModalTambah() {
+    document.getElementById('modalTambah').classList.add('hidden');
+    document.getElementById('tambah_nama_kategori').value = '';
+}
+
+// Modal Edit
+function openModalEdit(kategori) {
+    document.getElementById('edit_nama_kategori').value = kategori.nama_kategori;
+    document.getElementById('formEdit').action = '/kategori/update/' + kategori.id;
+    document.getElementById('modalEdit').classList.remove('hidden');
+    document.getElementById('edit_nama_kategori').focus();
+}
+
+function closeModalEdit() {
+    document.getElementById('modalEdit').classList.add('hidden');
+}
+
+// Modal Hapus
+function confirmDelete(id, nama) {
+    document.getElementById('hapus_nama').textContent = nama;
+    document.getElementById('hapus_link').href = '/kategori/delete/' + id;
+    document.getElementById('modalHapus').classList.remove('hidden');
+}
+
+function closeModalHapus() {
+    document.getElementById('modalHapus').classList.add('hidden');
+}
+
+// Search
+document.getElementById('searchKategori')?.addEventListener('input', function(e) {
+    const search = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('.kategori-row');
+    
+    rows.forEach(row => {
+        const nama = row.dataset.nama;
+        row.style.display = nama.includes(search) ? '' : 'none';
+    });
+});
+
+// Close modal on ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModalTambah();
+        closeModalEdit();
+        closeModalHapus();
+    }
+});
+
+// Close modal when clicking outside
+document.getElementById('modalTambah')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalTambah();
+});
+document.getElementById('modalEdit')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalEdit();
+});
+document.getElementById('modalHapus')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalHapus();
+});
+</script>
 
 <?= $this->endSection() ?>
