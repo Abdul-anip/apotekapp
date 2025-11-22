@@ -67,6 +67,33 @@
         </div>
     </div>
 
+    <!-- 🔴 Alert Cards untuk Kadaluarsa -->
+    <?php if ($obatSudahKadaluarsa > 0 || $obatAkanKadaluarsa > 0): ?>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <!-- Obat Sudah Kadaluarsa -->
+        <?php if ($obatSudahKadaluarsa > 0): ?>
+        <div class="bg-red-50 border-2 border-red-400 rounded-lg p-4 flex items-start">
+            <div class="bg-red-500 p-2 rounded-full mr-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h3 class="text-lg font-bold text-red-800 mb-1">⚠️ Obat Kadaluarsa!</h3>
+                <p class="text-red-700 text-sm">
+                    <span class="font-bold text-2xl"><?= $obatSudahKadaluarsa ?></span> obat sudah melewati tanggal kadaluarsa
+                </p>
+                <button onclick="toggleDetail('expired')" class="mt-2 text-red-600 hover:text-red-800 text-sm font-semibold underline">
+                    Lihat Detail →
+                </button>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        
+    </div>
+    <?php endif; ?>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- 🟢 Stok Menipis -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -101,6 +128,101 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <p class="text-gray-500">Semua stok obat aman! 🎉</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- 🔴 Obat Akan Kadaluarsa (30 Hari) -->
+        <div class="bg-white rounded-lg shadow p-6" id="upcoming-section" style="display: none;">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Akan Kadaluarsa (30 Hari)</h2>
+                <button onclick="toggleDetail('upcoming')" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <?php if (!empty($obatKadaluarsaDetail)): ?>
+                <div class="space-y-3">
+                    <?php foreach ($obatKadaluarsaDetail as $obat): 
+                        $tglED = strtotime($obat['tanggal_kadaluarsa']);
+                        $today = time();
+                        $diffDays = ceil(($tglED - $today) / (60 * 60 * 24));
+                    ?>
+                        <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-100">
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800"><?= esc($obat['nama_obat']) ?></p>
+                                <p class="text-sm text-gray-500"><?= esc($obat['nama_kategori'] ?? 'Tidak ada kategori') ?></p>
+                                <p class="text-xs text-gray-500 mt-1">Stok: <?= $obat['stok'] ?> unit</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-orange-600">
+                                    <?= date('d M Y', strtotime($obat['tanggal_kadaluarsa'])) ?>
+                                </p>
+                                <p class="text-xs text-orange-700 font-semibold mt-1">
+                                    <?= $diffDays ?> hari lagi
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-8">
+                    <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-gray-500">Tidak ada obat yang akan kadaluarsa dalam 30 hari</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- 🔴 Obat Sudah Kadaluarsa -->
+        <div class="bg-white rounded-lg shadow p-6" id="expired-section" style="display: none;">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Sudah Kadaluarsa</h2>
+                <button onclick="toggleDetail('expired')" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <?php if (!empty($obatSudahKadaluarsaDetail)): ?>
+                <div class="space-y-3">
+                    <?php foreach ($obatSudahKadaluarsaDetail as $obat): 
+                        $tglED = strtotime($obat['tanggal_kadaluarsa']);
+                        $today = time();
+                        $diffDays = floor(($today - $tglED) / (60 * 60 * 24));
+                    ?>
+                        <div class="flex items-center justify-between p-3 bg-red-100 rounded-lg border border-red-200">
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800"><?= esc($obat['nama_obat']) ?></p>
+                                <p class="text-sm text-gray-500"><?= esc($obat['nama_kategori'] ?? 'Tidak ada kategori') ?></p>
+                                <p class="text-xs text-gray-500 mt-1">Stok: <?= $obat['stok'] ?> unit</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-red-700">
+                                    <?= date('d M Y', strtotime($obat['tanggal_kadaluarsa'])) ?>
+                                </p>
+                                <p class="text-xs text-red-600 font-semibold mt-1">
+                                    <?= $diffDays ?> hari lalu
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p class="text-sm text-red-700 font-semibold">
+                        ⚠️ Segera keluarkan obat kadaluarsa dari stok!
+                    </p>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-8">
+                    <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-gray-500">Tidak ada obat yang sudah kadaluarsa</p>
                 </div>
             <?php endif; ?>
         </div>
@@ -177,5 +299,26 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleDetail(type) {
+    const upcomingSection = document.getElementById('upcoming-section');
+    const expiredSection = document.getElementById('expired-section');
+    
+    if (type === 'upcoming') {
+        if (upcomingSection.style.display === 'none') {
+            upcomingSection.style.display = 'block';
+        } else {
+            upcomingSection.style.display = 'none';
+        }
+    } else if (type === 'expired') {
+        if (expiredSection.style.display === 'none') {
+            expiredSection.style.display = 'block';
+        } else {
+            expiredSection.style.display = 'none';
+        }
+    }
+}
+</script>
 
 <?= $this->endSection() ?>
