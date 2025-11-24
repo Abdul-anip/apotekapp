@@ -52,4 +52,9 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
 $routes->group('', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($routes) {
     // Laporan - Hanya pemilik yang bisa akses
     $routes->get('/laporan', 'Laporan::index');
+    
+    // 🟢 ROUTES BARU: Cetak Laporan
+    $routes->get('/laporan/cetakSemua', 'Laporan::cetakSemua');
+    $routes->get('/laporan/cetakPeriode', 'Laporan::cetakPeriode');
+    $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
 });

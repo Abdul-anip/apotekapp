@@ -186,7 +186,7 @@ class Transaksi extends Controller
                 }
             }
 
-            $kode_transaksi = 'TRX-' . date('YmdHis');
+            $kode_transaksi = 'TRX,' . date('Y,m,d,H:i:s');
 
             // 🟢 Simpan laporan dengan keuntungan
             $laporanData = [
