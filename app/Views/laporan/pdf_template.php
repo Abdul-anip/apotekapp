@@ -159,7 +159,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <h1>🏥 TASYA FARMA</h1>
+        <h1>TASYA FARMA</h1>
         <p>Sistem Point of Sale Apotek</p>
         <p style="font-size: 12px; margin-top: 5px;"><?= $title ?></p>
     </div>
@@ -203,6 +203,7 @@
             <tr>
                 <th style="width: 5%;">No</th>
                 <th style="width: 20%;">Kode Transaksi</th>
+                <th style="width: 20%;">Kasir</th>
                 <th style="width: 15%;">Tanggal</th>
                 <th style="width: 15%;" class="text-right">Total</th>
                 <th style="width: 15%;" class="text-right">Keuntungan</th>
@@ -214,7 +215,8 @@
             <?php $no = 1; foreach ($laporan as $row): ?>
             <tr>
                 <td class="text-center"><?= $no++ ?></td>
-                <td><strong><?= esc($row['kode_transaksi']) ?></strong></td>
+                <td><?= esc($row['kode_transaksi']) ?></td>
+                <td><?= esc($row['nama_kasir']) ?></td>
                 <td><?= date('d/m/Y H:i', strtotime($row['tanggal'])) ?></td>
                 <td class="text-right"><strong>Rp <?= number_format($row['total_harga'], 0, ',', '.') ?></strong></td>
                 <td class="text-right">
@@ -233,9 +235,11 @@
             </tr>
             <?php endforeach; ?>
         </tbody>
+        
         <tfoot>
             <tr style="background: #f0fdfa; font-weight: bold;">
-                <td colspan="3" class="text-right">TOTAL:</td>
+                
+                <td colspan="4" class="text-right">TOTAL:</td>
                 <td class="text-right">Rp <?= number_format($total_penjualan, 0, ',', '.') ?></td>
                 <td class="text-right" style="color: #16a34a;">Rp <?= number_format($total_keuntungan, 0, ',', '.') ?></td>
 

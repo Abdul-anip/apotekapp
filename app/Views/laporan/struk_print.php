@@ -161,7 +161,7 @@
             </div>
             <div class="info-row">
                 <span>Kasir:</span>
-                <span><?= session()->get('username') ?></span>
+                <span><?= esc($transaksi['nama_kasir'] ?? $transaksi['kasir_fallback'] ?? session()->get('nama_lengkap')) ?></span>
             </div>
         </div>
         

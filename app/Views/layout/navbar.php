@@ -27,9 +27,10 @@
       <a href="<?= base_url('transaksi') ?>" class="hover:text-teal-400 transition font-medium">Transaksi</a>
       <a href="<?= base_url('penjualan') ?>" class="hover:text-teal-400 transition font-medium">Penjualan</a>
       
-      <!-- 🔴 Laporan - Hanya untuk Pemilik -->
+      <!-- 🔴 Laporan & User - Hanya untuk Pemilik -->
       <?php if (session()->get('role') === 'pemilik'): ?>
         <a href="<?= base_url('laporan') ?>" class="hover:text-teal-400 transition font-medium">Laporan</a>
+        <a href="<?= base_url('user') ?>" class="hover:text-teal-400 transition font-medium">User</a>
       <?php endif; ?>
 
       <!-- Dropdown Menu -->
@@ -56,12 +57,11 @@
             </a>
           </div>
 
-          <?php if (session()->get('role') === 'pemilik'): ?>
           <div class="p-2">
             <a href="<?= base_url('obat') ?>" class="group relative flex items-center gap-x-4 rounded-xl p-3 text-sm hover:bg-gray-700 transition">
               <div class="flex size-10 flex-none items-center justify-center rounded-lg bg-gray-700 group-hover:bg-teal-600 transition">
-                <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
               </div>
               <div class="flex-auto">
@@ -70,10 +70,7 @@
               </div>
             </a>
           </div>
-          <?php endif; ?>
         </el-popover>
-
-        
       </div>
 
       <!-- User Info & Logout -->
@@ -137,6 +134,7 @@
                 
                 <?php if (session()->get('role') === 'pemilik'): ?>
                   <a href="<?= base_url('laporan') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Laporan</a>
+                  <a href="<?= base_url('user') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">🟢 User Management</a>
                 <?php endif; ?>
               </div>
               

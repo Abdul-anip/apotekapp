@@ -302,4 +302,46 @@ setTimeout(() => {
 }, 5000);
 </script>
 
+
+<?php if (session()->getFlashdata('success_transaction')): ?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ambil ID Laporan dari PHP Session Flashdata
+        const laporanId = '<?= session()->getFlashdata('laporan_id') ?>';
+        
+        // Tampilkan dialog konfirmasi SweetAlert
+        Swal.fire({
+            icon: 'success',
+            title: 'Transaksi Berhasil!',
+            text: 'Pembayaran telah sukses diproses.',
+            showCancelButton: true,
+            confirmButtonColor: '#0d9488', // Teal-600
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Cetak Struk',
+            cancelButtonText: 'Tidak, Terima Kasih'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika user klik 'Ya, Cetak Struk', arahkan ke route cetak struk
+                // Asumsi URL cetak struk: /laporan/cetakStruk/ID_LAPORAN
+                if (laporanId) {
+                    window.open('<?= base_url('laporan/cetakStruk/') ?>' + laporanId, '_blank');
+                    // Tambahkan redirect setelah cetak (opsional)
+                    // window.location.href = '<?= base_url('transaksi') ?>'; 
+                } else {
+                    Swal.fire('Error', 'ID Transaksi tidak ditemukan.', 'error');
+                }
+            } else if (result.isDismissed) {
+                 // Jika user klik 'Tidak', biarkan di halaman transaksi
+                 // (Tidak perlu aksi tambahan)
+            }
+        });
+    });
+</script>
+
+<?php endif; ?>
+
+
+
+
 <?= $this->endSection() ?>
