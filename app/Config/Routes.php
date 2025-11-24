@@ -53,8 +53,17 @@ $routes->group('', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($r
     // Laporan - Hanya pemilik yang bisa akses
     $routes->get('/laporan', 'Laporan::index');
     
-    // 🟢 ROUTES BARU: Cetak Laporan
+    // 🟢 Cetak Laporan
     $routes->get('/laporan/cetakSemua', 'Laporan::cetakSemua');
     $routes->get('/laporan/cetakPeriode', 'Laporan::cetakPeriode');
     $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
+    
+    // 🟢 ROUTES BARU: User Management - Hanya pemilik
+    $routes->get('/user', 'User::index');
+    $routes->get('/user/create', 'User::create');
+    $routes->post('/user/store', 'User::store');
+    $routes->get('/user/edit/(:num)', 'User::edit/$1');
+    $routes->post('/user/update/(:num)', 'User::update/$1');
+    $routes->get('/user/delete/(:num)', 'User::delete/$1');
+    $routes->get('/user/toggleStatus/(:num)', 'User::toggleStatus/$1');
 });
