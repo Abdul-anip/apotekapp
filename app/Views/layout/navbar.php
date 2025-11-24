@@ -57,7 +57,6 @@
             </a>
           </div>
 
-          <?php if (session()->get('role') === 'pemilik'): ?>
           <div class="p-2">
             <a href="<?= base_url('obat') ?>" class="group relative flex items-center gap-x-4 rounded-xl p-3 text-sm hover:bg-gray-700 transition">
               <div class="flex size-10 flex-none items-center justify-center rounded-lg bg-gray-700 group-hover:bg-teal-600 transition">
@@ -71,7 +70,6 @@
               </div>
             </a>
           </div>
-          <?php endif; ?>
         </el-popover>
       </div>
 

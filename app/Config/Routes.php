@@ -45,6 +45,9 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('/transaksi/updateQuantity', 'Transaksi::updateQuantity');
     $routes->post('/transaksi/proses', 'Transaksi::proses');
     $routes->post('/transaksi/hitungKembalian', 'Transaksi::hitungKembalian');
+
+    
+    $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
     
 });
 

@@ -16,7 +16,9 @@ class LaporanTransaksiModel extends Model
         'bayar',
         'kembalian',
         'items',
+        'nama_kasir',
         'tanggal'
+        
     ];
 
     public function getLaporan()

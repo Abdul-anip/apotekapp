@@ -186,7 +186,12 @@ class Transaksi extends Controller
                 }
             }
 
-            $kode_transaksi = 'TRX,' . date('Y,m,d,H:i:s');
+            $kode_transaksi = 'TRX-' . date('YmdHis');
+
+            $nama_lengkap = $this->session->get('nama_lengkap');
+            $role_user    = $this->session->get('role');
+
+            $nama_kasir_dan_role = $nama_lengkap . ' (' . ucfirst($role_user) . ')';
 
             // 🟢 Simpan laporan dengan keuntungan
             $laporanData = [
@@ -198,6 +203,7 @@ class Transaksi extends Controller
                 'kembalian'      => $kembalian,
                 'items'          => json_encode(array_values($cart)),
                 'tanggal'        => date('Y-m-d H:i:s'),
+                'nama_kasir'     => $nama_kasir_dan_role,
             ];
 
             if (!$laporanModel->insert($laporanData)) {
@@ -211,9 +217,17 @@ class Transaksi extends Controller
                 return redirect()->back()->with('error', 'Transaksi gagal! Silakan coba lagi.');
             }
 
+            // app/Controllers/Transaksi.php
+// ...
+            $laporan_id = $laporanModel->getInsertID(); // Ambil ID dari tabel laporan_transaksi
+
             $this->session->remove('cart');
 
-            return redirect()->to('/transaksi')->with('success', 'Transaksi berhasil! ID Transaksi: ' . $transaksi_id);
+            // 💡 MODIFIKASI: Menggunakan flashdata untuk menyimpan ID laporan yang baru
+            return redirect()->to('/transaksi')
+                ->with('success_transaction', 'Transaksi berhasil!') // Pesan sukses utama
+                ->with('laporan_id', $laporan_id); // ID untuk dicetak struk
+// ...
 
         } catch (\Exception $e) {
             $db->transRollback();
