@@ -25,6 +25,8 @@
     <div class="hidden lg:flex lg:gap-x-8 text-white items-center">
       <a href="<?= base_url('/') ?>" class="hover:text-teal-400 transition font-medium">Dashboard</a>
       <a href="<?= base_url('penjualan') ?>" class="hover:text-teal-400 transition font-medium">Penjualan</a>
+      <a href="<?= base_url('konsultasi') ?>" class="hover:text-teal-400 transition font-medium">Konsultasi</a>
+      
       
       <!-- 🔴 Laporan & User - Hanya untuk Pemilik -->
       <?php if (session()->get('role') === 'pemilik'): ?>
@@ -130,6 +132,7 @@
                 <a href="<?= base_url('kategori') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Kategori</a>
                 <a href="<?= base_url('transaksi') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Transaksi</a>
                 <a href="<?= base_url('penjualan') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Penjualan</a>
+                <a href="<?= base_url('konsultasi') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Konsultasi</a>
                 
                 <?php if (session()->get('role') === 'pemilik'): ?>
                   <a href="<?= base_url('laporan') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Laporan</a>
