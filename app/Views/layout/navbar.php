@@ -24,7 +24,6 @@
     <!-- Desktop Menu -->
     <div class="hidden lg:flex lg:gap-x-8 text-white items-center">
       <a href="<?= base_url('/') ?>" class="hover:text-teal-400 transition font-medium">Dashboard</a>
-      <a href="<?= base_url('transaksi') ?>" class="hover:text-teal-400 transition font-medium">Transaksi</a>
       <a href="<?= base_url('penjualan') ?>" class="hover:text-teal-400 transition font-medium">Penjualan</a>
       
       <!-- 🔴 Laporan & User - Hanya untuk Pemilik -->

@@ -87,6 +87,7 @@
             <thead class="bg-gradient-to-r from-teal-600 to-teal-700 text-white">
                 <tr>
                     <th class="py-3 px-4 text-left">Kode Laporan</th>
+                    <th class="py-3 px-4 text-left">Kode Transaksi</th>
                     <th class="py-3 px-4 text-left">Kasir</th>
                     <th class="py-3 px-4 text-left">Tanggal</th>
                     <th class="py-3 px-4 text-right">Total Belanja</th>
@@ -110,6 +111,9 @@
                     <tr class="border-b hover:bg-gray-50 transition" data-kode="<?= strtolower($row['kode_transaksi']) ?>">
                         <td class="py-3 px-4">
                             <span class="font-bold text-teal-600"><?= $row['kode_transaksi'] ?></span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="font-bold text-teal-600"><?= $row['id_transaksi'] ?></span>
                         </td>
                         <td class="py-3 px-4">
                             <span class="font-bold text-teal-600"><?= $row['nama_kasir'] ?></span>

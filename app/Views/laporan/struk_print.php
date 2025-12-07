@@ -152,8 +152,12 @@
         <!-- Info Transaksi -->
         <div class="info">
             <div class="info-row">
-                <span>No.Transaksi:</span>
+                <span>Kode Laporan:</span>
                 <strong><?= $transaksi['kode_transaksi'] ?></strong>
+            </div>
+            <div class="info-row">
+                <span>Kode Transaksi:</span>
+                <strong><?= $transaksi['id_transaksi'] ?></strong>
             </div>
             <div class="info-row">
                 <span>Tanggal:</span>
