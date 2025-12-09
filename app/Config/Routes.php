@@ -48,10 +48,14 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
 
     
     $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
+    
 
     $routes->get('/konsultasi', 'Konsultasi::index');
     $routes->post('/konsultasi/proses', 'Konsultasi::proses');
+    $routes->get('/konsultasi/hasil', 'Konsultasi::hasil');
+    $routes->get('/konsultasi/riwayat', 'Konsultasi::riwayat');
     
+
     
 });
 

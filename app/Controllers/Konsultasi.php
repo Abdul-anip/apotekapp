@@ -32,7 +32,7 @@ class Konsultasi extends BaseController
     }
 
     /**
-     * Proses diagnosa dan tampilkan hasil
+     * Proses diagnosa dan redirect ke halaman hasil
      */
     public function proses()
     {
@@ -87,7 +87,7 @@ class Konsultasi extends BaseController
         $hasil = $this->session->get('hasil_diagnosa');
 
         if (empty($hasil)) {
-            return redirect()->to('/konsultasi')->with('error', 'Belum ada hasil diagnosa.');
+            return redirect()->to('/konsultasi')->with('error', 'Belum ada hasil diagnosa. Silakan lakukan konsultasi terlebih dahulu.');
         }
 
         $data = [
@@ -98,38 +98,6 @@ class Konsultasi extends BaseController
         ];
 
         return view('konsultasi/hasil', $data);
-    }
-
-    /**
-     * Tambah obat rekomendasi langsung ke keranjang
-     */
-    public function tambahKeKeranjang($id_obat)
-    {
-        $obatModel = new \App\Models\ObatModel();
-        $obat = $obatModel->find($id_obat);
-
-        if (!$obat) {
-            return redirect()->back()->with('error', 'Obat tidak ditemukan.');
-        }
-
-        $cart = $this->session->get('cart') ?? [];
-
-        if (isset($cart[$id_obat])) {
-            $cart[$id_obat]['jumlah']++;
-            $cart[$id_obat]['subtotal'] = $cart[$id_obat]['jumlah'] * $obat['harga_jual'];
-        } else {
-            $cart[$id_obat] = [
-                'id_obat'    => $obat['id_obat'],
-                'nama_obat'  => $obat['nama_obat'],
-                'harga_jual' => $obat['harga_jual'],
-                'jumlah'     => 1,
-                'subtotal'   => $obat['harga_jual'],
-            ];
-        }
-
-        $this->session->set('cart', $cart);
-
-        return redirect()->back()->with('success', 'Obat berhasil ditambahkan ke keranjang!');
     }
 
     /**
