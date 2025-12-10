@@ -59,22 +59,63 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     
 });
 
-// 🔴 Routes Khusus Pemilik (Role: pemilik)
-$routes->group('', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($routes) {
-    // Laporan - Hanya pemilik yang bisa akses
-    $routes->get('/laporan', 'Laporan::index');
-    
-    // 🟢 Cetak Laporan
-    $routes->get('/laporan/cetakSemua', 'Laporan::cetakSemua');
-    $routes->get('/laporan/cetakPeriode', 'Laporan::cetakPeriode');
-    $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
-    
-    // 🟢 ROUTES BARU: User Management - Hanya pemilik
-    $routes->get('/user', 'User::index');
-    $routes->get('/user/create', 'User::create');
-    $routes->post('/user/store', 'User::store');
-    $routes->get('/user/edit/(:num)', 'User::edit/$1');
-    $routes->post('/user/update/(:num)', 'User::update/$1');
-    $routes->get('/user/delete/(:num)', 'User::delete/$1');
-    $routes->get('/user/toggleStatus/(:num)', 'User::toggleStatus/$1');
+//routes khusus Pemilik (Role: pemilik)
+        $routes->group('', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($routes) {
+            // Laporan - Hanya pemilik yang bisa akses
+            $routes->get('/laporan', 'Laporan::index');
+            
+            //  cetak Laporan
+            $routes->get('/laporan/cetakSemua', 'Laporan::cetakSemua');
+            $routes->get('/laporan/cetakPeriode', 'Laporan::cetakPeriode');
+            $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
+            
+            // ROUTES BARU: User Management - Hanya pemilik
+            $routes->get('/user', 'User::index');
+            $routes->get('/user/create', 'User::create');
+            $routes->post('/user/store', 'User::store');
+            $routes->get('/user/edit/(:num)', 'User::edit/$1');
+            $routes->post('/user/update/(:num)', 'User::update/$1');
+            $routes->get('/user/delete/(:num)', 'User::delete/$1');
+            $routes->get('/user/toggleStatus/(:num)', 'User::toggleStatus/$1');
+
+        // ================== SISTEM PAKAR ROUTES ==================
+        $routes->group('admin', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($routes) {
+            
+            // ========== DASHBOARD SISTEM PAKAR ==========
+            $routes->get('sistem-pakar', 'Admin\DashboardSistemPakar::index');
+            
+            // ========== MANAJEMEN PENYAKIT ==========
+            $routes->get('penyakit', 'Admin\Penyakit::index');
+            $routes->get('penyakit/create', 'Admin\Penyakit::create');
+            $routes->post('penyakit/store', 'Admin\Penyakit::store');
+            $routes->get('penyakit/edit/(:num)', 'Admin\Penyakit::edit/$1');
+            $routes->post('penyakit/update/(:num)', 'Admin\Penyakit::update/$1');
+            $routes->get('penyakit/delete/(:num)', 'Admin\Penyakit::delete/$1');
+            $routes->get('penyakit/detail/(:num)', 'Admin\Penyakit::detail/$1');
+            $routes->get('penyakit/generate-kode', 'Admin\Penyakit::generateKode'); // API
+            
+            // ========== MANAJEMEN GEJALA ==========
+            $routes->get('gejala', 'Admin\Gejala::index');
+            $routes->get('gejala/create', 'Admin\Gejala::create');
+            $routes->post('gejala/store', 'Admin\Gejala::store');
+            $routes->get('gejala/edit/(:num)', 'Admin\Gejala::edit/$1');
+            $routes->post('gejala/update/(:num)', 'Admin\Gejala::update/$1');
+            $routes->get('gejala/delete/(:num)', 'Admin\Gejala::delete/$1');
+            $routes->get('gejala/generate-kode', 'Admin\Gejala::generateKode'); // API
+            
+            // ========== MANAJEMEN ATURAN (Knowledge Base) ==========
+            $routes->get('aturan', 'Admin\Aturan::index');
+            $routes->get('aturan/create', 'Admin\Aturan::create');
+            $routes->post('aturan/store', 'Admin\Aturan::store');
+            $routes->get('aturan/edit/(:num)', 'Admin\Aturan::edit/$1');
+            $routes->post('aturan/update/(:num)', 'Admin\Aturan::update/$1');
+            $routes->get('aturan/delete/(:num)', 'Admin\Aturan::delete/$1');
+            
+            // Bulk Create - Tambah banyak gejala sekaligus untuk 1 penyakit
+            $routes->get('aturan/bulk-create/(:num)', 'Admin\Aturan::bulkCreate/$1');
+            $routes->post('aturan/bulk-store', 'Admin\Aturan::bulkStore');
+        }
+);
+
+
 });

@@ -28,10 +28,76 @@
       <a href="<?= base_url('konsultasi') ?>" class="hover:text-teal-400 transition font-medium">Konsultasi</a>
       
       
-      <!-- 🔴 Laporan & User - Hanya untuk Pemilik -->
+      <!--  Laporan & User - Hanya untuk Pemilik -->
       <?php if (session()->get('role') === 'pemilik'): ?>
         <a href="<?= base_url('laporan') ?>" class="hover:text-teal-400 transition font-medium">Laporan</a>
         <a href="<?= base_url('user') ?>" class="hover:text-teal-400 transition font-medium">User</a>
+
+        <!-- Dropdown Menu Sistem Pakar -->
+        <div class="relative group font-bold">
+          <button popovertarget="desktop-menu-sistem-pakar" class="flex items-center gap-x-1 text-sm/6 font-semibold text-white hover:text-teal-400 transition">
+            Sistem Pakar
+            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 flex-none">
+              <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+            </svg>
+          </button>
+
+          <el-popover id="desktop-menu-sistem-pakar" anchor="bottom" popover class="w-screen max-w-xs overflow-hidden rounded-2xl bg-gray-800 shadow-2xl transition">
+            <div class="p-2">
+              <!-- Dashboard -->
+              <a href="<?= base_url('admin/sistem-pakar') ?>" class="group relative flex items-center gap-x-4 rounded-xl p-3 text-sm hover:bg-gray-700 transition">
+                <div class="flex size-10 flex-none items-center justify-center rounded-lg bg-gray-700 group-hover:bg-teal-600 transition">
+                  <svg class="size-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0h2a2 2 0 012 2v0a2 2 0 01-2 2h-2a2 2 0 01-2-2v0z"/>
+                  </svg>
+                </div>
+                <div class="flex-auto">
+                  <span class="block font-semibold text-white">Dashboard Analytics</span>
+                  <p class="mt-1 text-gray-400 text-xs">Statistik sistem pakar</p>
+                </div>
+              </a>
+
+              <!-- Penyakit -->
+              <a href="<?= base_url('admin/penyakit') ?>" class="group relative flex items-center gap-x-4 rounded-xl p-3 text-sm hover:bg-gray-700 transition">
+                <div class="flex size-10 flex-none items-center justify-center rounded-lg bg-gray-700 group-hover:bg-teal-600 transition">
+                  <svg class="size-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <div class="flex-auto">
+                  <span class="block font-semibold text-white">Penyakit</span>
+                  <p class="mt-1 text-gray-400 text-xs">Kelola daftar penyakit</p>
+                </div>
+              </a>
+
+              <!-- Gejala -->
+              <a href="<?= base_url('admin/gejala') ?>" class="group relative flex items-center gap-x-4 rounded-xl p-3 text-sm hover:bg-gray-700 transition">
+                <div class="flex size-10 flex-none items-center justify-center rounded-lg bg-gray-700 group-hover:bg-teal-600 transition">
+                  <svg class="size-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                </div>
+                <div class="flex-auto">
+                  <span class="block font-semibold text-white">Gejala</span>
+                  <p class="mt-1 text-gray-400 text-xs">Kelola daftar gejala</p>
+                </div>
+              </a>
+
+              <!-- Aturan -->
+              <a href="<?= base_url('admin/aturan') ?>" class="group relative flex items-center gap-x-4 rounded-xl p-3 text-sm hover:bg-gray-700 transition">
+                <div class="flex size-10 flex-none items-center justify-center rounded-lg bg-gray-700 group-hover:bg-teal-600 transition">
+                  <svg class="size-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                  </svg>
+                </div>
+                <div class="flex-auto">
+                  <span class="block font-semibold text-white">Aturan (Knowledge Base)</span>
+                  <p class="mt-1 text-gray-400 text-xs">Kelola aturan diagnosa</p>
+                </div>
+              </a>
+            </div>
+          </el-popover>
+        </div>
       <?php endif; ?>
 
       <!-- Dropdown Menu -->
@@ -79,7 +145,7 @@
         <div class="text-right">
           <p class="text-sm font-semibold text-white"><?= session()->get('nama_lengkap') ?></p>
           <p class="text-xs text-gray-400">
-            <?= session()->get('role') === 'pemilik' ? '👑 Pemilik' : '👨‍💼 Kasir' ?>
+            <?= session()->get('role') === 'pemilik' ? 'Pemilik' : 'Kasir' ?>
           </p>
         </div>
         <a href="<?= base_url('auth/logout') ?>" 
@@ -136,7 +202,7 @@
                 
                 <?php if (session()->get('role') === 'pemilik'): ?>
                   <a href="<?= base_url('laporan') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">Laporan</a>
-                  <a href="<?= base_url('user') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">🟢 User Management</a>
+                  <a href="<?= base_url('user') ?>" class="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-gray-800">User Management</a>
                 <?php endif; ?>
               </div>
               
