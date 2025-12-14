@@ -34,9 +34,6 @@ class PenyakitModel extends Model
         ]
     ];
 
-    /**
-     * Generate kode penyakit otomatis (P001, P002, ...)
-     */
     public function generateKodePenyakit()
     {
         $lastPenyakit = $this->orderBy('id', 'DESC')->first();
@@ -45,7 +42,7 @@ class PenyakitModel extends Model
             return 'P001';
         }
         
-        // Ambil nomor dari kode terakhir
+        // ambil nomor dari kode terakhir
         $lastKode = $lastPenyakit['kode_penyakit'];
         $number = (int)substr($lastKode, 1); // Ambil angka setelah 'P'
         $newNumber = $number + 1;
@@ -53,9 +50,6 @@ class PenyakitModel extends Model
         return 'P' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
     }
 
-    /**
-     * Get penyakit dengan jumlah aturan
-     */
     public function getPenyakitWithAturanCount()
     {
         return $this->select('penyakit.*, COUNT(aturan.id) as jumlah_aturan')
@@ -91,9 +85,6 @@ class PenyakitModel extends Model
         return $penyakit;
     }
 
-    /**
-     * Check jika penyakit punya aturan
-     */
     public function hasAturan($id)
     {
         $db = \Config\Database::connect();
@@ -104,9 +95,6 @@ class PenyakitModel extends Model
         return $count > 0;
     }
 
-    /**
-     * Hapus penyakit beserta aturan terkait
-     */
     public function deletePenyakitWithAturan($id)
     {
         $db = \Config\Database::connect();

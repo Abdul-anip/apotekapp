@@ -179,9 +179,6 @@ class Gejala extends BaseController
         }
     }
 
-    /**
-     * API: Generate kode gejala otomatis
-     */
     public function generateKode()
     {
         $lastGejala = $this->gejalaModel->orderBy('id', 'DESC')->first();

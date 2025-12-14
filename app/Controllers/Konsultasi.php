@@ -31,9 +31,6 @@ class Konsultasi extends BaseController
         return view('konsultasi/index', $data);
     }
 
-    /**
-     * Proses diagnosa dan redirect ke halaman hasil
-     */
     public function proses()
     {
         // Validasi input
@@ -57,18 +54,15 @@ class Konsultasi extends BaseController
         // Dapatkan detail gejala yang dipilih
         $gejala_dipilih = $this->gejalaModel->getGejalaByIds($gejala_ids);
 
-        // Dapatkan rekomendasi obat untuk penyakit dengan CF tertinggi
         $penyakit_utama = $hasil_diagnosa[0];
         $rekomendasi_obat = $this->sistemPakarModel->getRekomendasiObat($penyakit_utama['id_penyakit']);
 
-        // Simpan ke session untuk ditampilkan di hasil
         $this->session->set('hasil_diagnosa', [
             'gejala_dipilih'   => $gejala_dipilih,
             'hasil_diagnosa'   => $hasil_diagnosa,
             'rekomendasi_obat' => $rekomendasi_obat,
         ]);
 
-        // Simpan riwayat konsultasi
         $this->sistemPakarModel->simpanRiwayat([
             'id_user'                => $this->session->get('user_id'),
             'gejala_input'           => $gejala_ids,
@@ -79,9 +73,6 @@ class Konsultasi extends BaseController
         return redirect()->to('/konsultasi/hasil');
     }
 
-    /**
-     * Tampilkan hasil diagnosa
-     */
     public function hasil()
     {
         $hasil = $this->session->get('hasil_diagnosa');
@@ -100,9 +91,6 @@ class Konsultasi extends BaseController
         return view('konsultasi/hasil', $data);
     }
 
-    /**
-     * Riwayat konsultasi
-     */
     public function riwayat()
     {
         $db = \Config\Database::connect();

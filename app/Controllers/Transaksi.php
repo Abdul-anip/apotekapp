@@ -104,13 +104,13 @@ class Transaksi extends Controller
 
             $bayar = (float) $bayar;
             $total = 0;
-            $total_keuntungan = 0; // 🟢 TAMBAHAN: Hitung keuntungan
+            $total_keuntungan = 0; // TAMBAHAN: Hitung keuntungan
 
             // Hitung total dan keuntungan
             foreach ($cart as $item) {
                 $total += $item['subtotal'];
                 
-                // 🟢 Ambil harga beli untuk hitung keuntungan
+                // Ambil harga beli untuk hitung keuntungan
                 $obat = $this->obat->find($item['id_obat']);
                 if ($obat) {
                     $harga_beli_total = $obat['harga_beli'] * $item['jumlah'];
@@ -193,12 +193,11 @@ class Transaksi extends Controller
 
             $nama_kasir_dan_role = $nama_lengkap . ' (' . ucfirst($role_user) . ')';
 
-            // 🟢 Simpan laporan dengan keuntungan
             $laporanData = [
                 'kode_transaksi' => $kode_transaksi,
                 'id_transaksi'   => $transaksi_id,
                 'total_harga'    => $total,
-                'keuntungan'     => $total_keuntungan, // 🟢 TAMBAHAN
+                'keuntungan'     => $total_keuntungan,
                 'bayar'          => $bayar,
                 'kembalian'      => $kembalian,
                 'items'          => json_encode(array_values($cart)),
