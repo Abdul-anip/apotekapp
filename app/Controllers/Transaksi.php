@@ -104,13 +104,11 @@ class Transaksi extends Controller
 
             $bayar = (float) $bayar;
             $total = 0;
-            $total_keuntungan = 0; // TAMBAHAN: Hitung keuntungan
+            $total_keuntungan = 0;
 
-            // Hitung total dan keuntungan
             foreach ($cart as $item) {
                 $total += $item['subtotal'];
                 
-                // Ambil harga beli untuk hitung keuntungan
                 $obat = $this->obat->find($item['id_obat']);
                 if ($obat) {
                     $harga_beli_total = $obat['harga_beli'] * $item['jumlah'];
@@ -131,7 +129,6 @@ class Transaksi extends Controller
             $laporanModel = new \App\Models\LaporanTransaksiModel();
             $obatModel = new \App\Models\ObatModel();
             
-            // Cek stok
             foreach ($cart as $item) {
                 $obat = $obatModel->find($item['id_obat']);
                 if (!$obat) {
@@ -144,7 +141,6 @@ class Transaksi extends Controller
                 }
             }
 
-            // Simpan transaksi
             $transaksiData = [
                 'tanggal_transaksi' => date('Y-m-d H:i:s'),
                 'total'       => $total,
@@ -161,7 +157,6 @@ class Transaksi extends Controller
             
             $transaksi_id = $transaksiModel->getInsertID();
 
-            // Simpan detail + kurangi stok
             foreach ($cart as $item) {
                 $detailData = [
                     'id_transaksi' => $transaksi_id,
@@ -216,8 +211,10 @@ class Transaksi extends Controller
                 return redirect()->back()->with('error', 'Transaksi gagal! Silakan coba lagi.');
             }
 
-            // app/Controllers/Transaksi.php
-// ...
+            $laporan_id = $laporanModel->getInsertID();
+
+            $this->session->remove('cart');
+
             $laporan_id = $laporanModel->getInsertID(); // Ambil ID dari tabel laporan_transaksi
 
             $this->session->remove('cart');

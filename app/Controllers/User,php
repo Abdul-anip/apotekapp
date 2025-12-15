@@ -14,7 +14,6 @@ class User extends BaseController
         $this->userModel = new UserModel();
         $this->session = session();
         
-        // Cek apakah user adalah pemilik
         if ($this->session->get('role') !== 'pemilik') {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Halaman tidak ditemukan');
         }
@@ -43,7 +42,6 @@ class User extends BaseController
 
     public function store()
     {
-        // Validasi
         $rules = [
             'username'     => 'required|min_length[3]|max_length[100]|is_unique[users.username]',
             'password'     => 'required|min_length[6]',
@@ -55,10 +53,9 @@ class User extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Simpan user
         $data = [
             'username'     => $this->request->getPost('username'),
-            'password'     => $this->request->getPost('password'), // Akan di-hash otomatis di model
+            'password'     => $this->request->getPost('password'), 
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
             'role'         => $this->request->getPost('role'),
             'is_active'    => 1,
@@ -95,14 +92,12 @@ class User extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('User tidak ditemukan');
         }
 
-        // Validasi
         $rules = [
             'username'     => "required|min_length[3]|max_length[100]|is_unique[users.username,id,{$id}]",
             'nama_lengkap' => 'required|max_length[150]',
             'role'         => 'required|in_list[pemilik,kasir]',
         ];
 
-        // Jika password diisi, validasi password
         if ($this->request->getPost('password')) {
             $rules['password'] = 'min_length[6]';
         }
@@ -111,7 +106,6 @@ class User extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Update user
         $data = [
             'username'     => $this->request->getPost('username'),
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
@@ -119,7 +113,6 @@ class User extends BaseController
             'is_active'    => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
-        // Jika password diisi, update password
         if ($this->request->getPost('password')) {
             $data['password'] = $this->request->getPost('password');
         }
@@ -133,7 +126,6 @@ class User extends BaseController
 
     public function delete($id)
     {
-        // Cek apakah user yang akan dihapus adalah diri sendiri
         if ($id == $this->session->get('user_id')) {
             return redirect()->to('/user')->with('error', 'Anda tidak dapat menghapus akun sendiri!');
         }
@@ -153,7 +145,6 @@ class User extends BaseController
 
     public function toggleStatus($id)
     {
-        // Cek apakah user yang akan dinonaktifkan adalah diri sendiri
         if ($id == $this->session->get('user_id')) {
             return redirect()->to('/user')->with('error', 'Anda tidak dapat menonaktifkan akun sendiri!');
         }
