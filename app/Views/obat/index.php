@@ -15,11 +15,17 @@
                 </svg>
                 Tambah Obat
             </button>
-            <a href="/kategori" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition shadow-md flex items-center gap-2">
+            <a href="<?= base_url('kategori') ?>" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition shadow-md flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                 </svg>
                 Kategori
+            </a>
+            <a href="<?= base_url('obat/import') ?>" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-md flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+                Import Excel
             </a>
         </div>
     </div>
@@ -159,7 +165,7 @@
                 </svg>
             </button>
         </div>
-        <form action="/obat/store" method="post" class="p-6">
+        <form action="<?= base_url('obat/store') ?>" method="post" class="p-6">
             <?= csrf_field() ?>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
@@ -306,7 +312,7 @@ function openModalEdit(obat) {
     document.getElementById('edit_harga_jual').value = obat.harga_jual;
     document.getElementById('edit_stok').value = obat.stok;
     document.getElementById('edit_tanggal_kadaluarsa').value = obat.tanggal_kadaluarsa;
-    document.getElementById('formEdit').action = '/obat/update/' + obat.id_obat;
+    document.getElementById('formEdit').action = '<?= base_url('obat/update') ?>/' + obat.id_obat;
     document.getElementById('modalEdit').classList.remove('hidden');
 }
 
@@ -316,7 +322,7 @@ function closeModalEdit() {
 
 function confirmDelete(id, nama) {
     if (confirm(`Apakah Anda yakin ingin menghapus obat "${nama}"?`)) {
-        window.location.href = '/obat/delete/' + id;
+        window.location.href = '<?= base_url('obat/delete') ?>/' + id;
     }
 }
 

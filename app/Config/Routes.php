@@ -6,40 +6,36 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// 🔴 Auth Routes (Tanpa Filter)
 $routes->get('/auth', 'Auth::index');
 $routes->post('/auth/login', 'Auth::login');
 $routes->get('/auth/logout', 'Auth::logout');
 
-// 🔴 Protected Routes (Harus Login)
 $routes->group('', ['filter' => 'auth'], function($routes) {
     
-    // Dashboard - Semua role bisa akses
     $routes->get('/', 'Dashboard::index');
     
-    // Obat - Semua role bisa akses
     $routes->get('/obat', 'Obat::index');
     $routes->get('/obat/create', 'Obat::create');
     $routes->post('/obat/store', 'Obat::store');
     $routes->get('/obat/edit/(:num)', 'Obat::edit/$1');
     $routes->post('/obat/update/(:num)', 'Obat::update/$1');
     $routes->get('/obat/delete/(:num)', 'Obat::delete/$1');
+    $routes->get('/obat/import', 'Obat::importExcel');
+    $routes->post('/obat/process-import', 'Obat::processImport');
+    $routes->get('/obat/download-template', 'Obat::downloadTemplate');
     
-    // Penjualan - Semua role bisa akses
     $routes->get('/penjualan', 'Penjualan::index');
     $routes->get('/penjualan/add/(:num)', 'Penjualan::add/$1');
     $routes->get('/penjualan/checkout', 'Penjualan::checkout');
     
-    // Kategori - Semua role bisa akses
-    $routes->get('/kategori', 'Kategori::index');
+     $routes->get('/kategori', 'Kategori::index');
     $routes->get('/kategori/create', 'Kategori::create');
     $routes->post('/kategori/store', 'Kategori::store');
     $routes->get('/kategori/edit/(:num)', 'Kategori::edit/$1');
     $routes->post('/kategori/update/(:num)', 'Kategori::update/$1');
     $routes->get('/kategori/delete/(:num)', 'Kategori::delete/$1');
     
-    // Transaksi - Semua role bisa akses
-    $routes->get('/transaksi', 'Transaksi::index');
+     $routes->get('/transaksi', 'Transaksi::index');
     $routes->post('/transaksi/store', 'Transaksi::store');
     $routes->get('/transaksi/remove/(:num)', 'Transaksi::remove/$1');
     $routes->post('/transaksi/updateQuantity', 'Transaksi::updateQuantity');
@@ -59,18 +55,14 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     
 });
 
-//routes khusus Pemilik (Role: pemilik)
-        $routes->group('', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($routes) {
-            // Laporan - Hanya pemilik yang bisa akses
-            $routes->get('/laporan', 'Laporan::index');
+         $routes->group('', ['filter' => 'auth', 'filter' => 'role:pemilik'], function($routes) {
+             $routes->get('/laporan', 'Laporan::index');
             
-            //  cetak Laporan
-            $routes->get('/laporan/cetakSemua', 'Laporan::cetakSemua');
+             $routes->get('/laporan/cetakSemua', 'Laporan::cetakSemua');
             $routes->get('/laporan/cetakPeriode', 'Laporan::cetakPeriode');
             $routes->get('/laporan/cetakStruk/(:num)', 'Laporan::cetakStruk/$1');
             
-            // ROUTES BARU: User Management - Hanya pemilik
-            $routes->get('/user', 'User::index');
+             $routes->get('/user', 'User::index');
             $routes->get('/user/create', 'User::create');
             $routes->post('/user/store', 'User::store');
             $routes->get('/user/edit/(:num)', 'User::edit/$1');
@@ -102,6 +94,10 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
             $routes->post('gejala/update/(:num)', 'Admin\Gejala::update/$1');
             $routes->get('gejala/delete/(:num)', 'Admin\Gejala::delete/$1');
             $routes->get('gejala/generate-kode', 'Admin\Gejala::generateKode'); // API
+            $routes->get('gejala/import', 'Admin\Gejala::importExcel', ['filter' => 'auth']);
+            $routes->post('gejala/process-import', 'Admin\Gejala::processImport', ['filter' => 'auth']);
+            $routes->get('gejala/download-template', 'Admin\Gejala::downloadTemplate', ['filter' => 'auth']);
+            
             
             // ========== MANAJEMEN ATURAN (Knowledge Base) ==========
             $routes->get('aturan', 'Admin\Aturan::index');

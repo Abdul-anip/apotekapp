@@ -40,11 +40,11 @@ class Auth extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        // Cek login
+        // cek login
         $user = $this->userModel->login($username, $password);
 
         if ($user) {
-            // Set session
+            // set session
             $sessionData = [
                 'user_id'      => $user['id'],
                 'username'     => $user['username'],

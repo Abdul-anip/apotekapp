@@ -19,7 +19,7 @@ class Konsultasi extends BaseController
     }
 
     /**
-     * Halaman form input gejala
+     * halaman form input gejala
      */
     public function index()
     {
@@ -40,8 +40,6 @@ class Konsultasi extends BaseController
             return redirect()->back()->with('error', 'Pilih minimal 1 gejala!');
         }
 
-        // Optional: CF user (tingkat kepercayaan user terhadap gejala)
-        // Untuk kesederhanaan, kita set semua CF user = 1.0
         $cf_user = array_fill(0, count($gejala_ids), 1.0);
 
         // Proses Forward Chaining
@@ -104,7 +102,6 @@ class Konsultasi extends BaseController
 
         $riwayat = $query->getResultArray();
 
-        // Decode JSON
         foreach ($riwayat as &$row) {
             $row['gejala_input'] = json_decode($row['gejala_input'], true);
             $row['hasil_diagnosa'] = json_decode($row['hasil_diagnosa'], true);
