@@ -28,21 +28,18 @@ class Penyakit extends BaseController
         $penyakit = $this->penyakitModel->getPenyakitWithAturanCount();
         $stats = $this->penyakitModel->getStatistik();
 
-        // --- Perbaikan Dimulai Di Sini ---
-        // Ambil daftar obat untuk digunakan di modal/form penambahan penyakit baru (seperti di create())
+        // ambil daftar obat untuk digunakan di modal/form penambahan penyakit baru (seperti di create())
         $obatList = $this->obatModel
             ->select('id_obat, nama_obat, merk, harga_jual, stok')
             ->where('stok >', 0)
             ->orderBy('nama_obat', 'ASC')
             ->findAll();
-        // --- Perbaikan Selesai Di Sini ---
 
         $data = [
             'title'    => 'Manajemen Penyakit',
             'penyakit' => $penyakit,
             'stats'    => $stats,
             'kodeOtomatis'  => $kodeOtomatis,
-            // --- Tambahkan variabel obat_list ke view ---
             'obat_list'     => $obatList, 
         ];
 
@@ -97,7 +94,7 @@ class Penyakit extends BaseController
             $this->penyakitModel->insert($penyakitData);
             $penyakitId = $this->penyakitModel->getInsertID();
 
-            // simpan 
+            // simpan rekomendasi obat
             $obatIds = $this->request->getPost('obat_ids'); // Array
             $priorities = $this->request->getPost('priorities'); // Array
             $dosages = $this->request->getPost('dosages'); // Array
@@ -250,7 +247,6 @@ class Penyakit extends BaseController
                 return redirect()->to('/admin/penyakit')->with('error', 'Gagal menghapus penyakit!');
             }
         } else {
-            // 🆕 Hapus rekomendasi obat juga
             $db = \Config\Database::connect();
             $db->table('rekomendasi_obat')->where('id_penyakit', $id)->delete();
             
@@ -270,7 +266,7 @@ class Penyakit extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Penyakit tidak ditemukan');
         }
 
-        // 🆕 Ambil rekomendasi obat
+        //  ambil rekomendasi obat
         $db = \Config\Database::connect();
         $rekomendasiObat = $db->table('rekomendasi_obat')
             ->select('rekomendasi_obat.*, obat.nama_obat, obat.merk, obat.harga_jual, obat.stok')
@@ -280,10 +276,17 @@ class Penyakit extends BaseController
             ->get()
             ->getResultArray();
 
+        if ($this->request->isAJAX() || $this->request->getGet('format') === 'json') {
+            return $this->response->setJSON([
+                'penyakit'         => $penyakit,
+                'rekomendasi'      => $rekomendasiObat
+            ]);
+        }
+
         $data = [
             'title'            => 'Detail Penyakit - ' . $penyakit['nama_penyakit'],
             'penyakit'         => $penyakit,
-            'rekomendasi_obat' => $rekomendasiObat // 🆕
+            'rekomendasi_obat' => $rekomendasiObat 
         ];
 
         return view('admin/penyakit/detail', $data);

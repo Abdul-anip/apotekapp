@@ -452,6 +452,30 @@ input[type="range"].slider-yellow::-moz-range-thumb {
 }
 </style>
 
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="modalHapus" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all">
+        <div class="p-6 text-center">
+            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Hapus Aturan?</h3>
+            <p id="hapus_deskripsi" class="text-gray-600 mb-6"></p>
+            <div class="flex gap-3">
+                <button onclick="closeModalHapus()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+                <a id="hapus_link" href="#" class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition font-semibold text-center">
+                    Ya, Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // Modal Tambah
 function openModalTambah() {
@@ -490,9 +514,13 @@ function updateEditCF() {
 
 // Delete
 function confirmDelete(id, penyakit, gejala) {
-    if (confirm(`Hapus aturan:\n${penyakit} → ${gejala}?`)) {
-        window.location.href = '/admin/aturan/delete/' + id;
-    }
+    document.getElementById('hapus_deskripsi').innerHTML = `Apakah Anda yakin ingin menghapus aturan:<br><strong>${penyakit} → ${gejala}</strong>?`;
+    document.getElementById('hapus_link').href = '/admin/aturan/delete/' + id;
+    document.getElementById('modalHapus').classList.remove('hidden');
+}
+
+function closeModalHapus() {
+    document.getElementById('modalHapus').classList.add('hidden');
 }
 
 // Search & Filter
@@ -521,6 +549,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeModalTambah();
         closeModalEdit();
+        closeModalHapus();
     }
 });
 
@@ -530,6 +559,9 @@ document.getElementById('modalTambah')?.addEventListener('click', (e) => {
 });
 document.getElementById('modalEdit')?.addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeModalEdit();
+});
+document.getElementById('modalHapus')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalHapus();
 });
 </script>
 

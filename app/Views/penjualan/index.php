@@ -102,13 +102,52 @@
     <?php endif; ?>
 </div>
 
+
+<!-- Modal Konfirmasi Tambah -->
+<div id="modalTambah" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all">
+        <div class="p-6 text-center">
+            <div class="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Tambah ke Keranjang?</h3>
+            <p class="text-gray-600 mb-6">Tambahkan obat "<span id="tambah_nama" class="font-semibold text-teal-600"></span>" ke keranjang belanja?</p>
+            <div class="flex gap-3">
+                <button onclick="closeModalTambah()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+                <a id="tambah_link" href="#" class="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition font-semibold text-center shadow-md">
+                    Ya, Tambahkan
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // Fungsi Tambah ke Keranjang dengan Konfirmasi
 function tambahKeKeranjang(id, nama) {
-    if (confirm(`Tambahkan "${nama}" ke keranjang?`)) {
-        window.location.href = '/penjualan/add/' + id;
-    }
+    document.getElementById('tambah_nama').textContent = nama;
+    document.getElementById('tambah_link').href = '/penjualan/add/' + id;
+    document.getElementById('modalTambah').classList.remove('hidden');
 }
+
+function closeModalTambah() {
+    document.getElementById('modalTambah').classList.add('hidden');
+}
+
+// Close modal on ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModalTambah();
+    }
+});
+
+document.getElementById('modalTambah')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalTambah();
+});
 
 // Search Obat
 document.getElementById('searchObat')?.addEventListener('input', function(e) {

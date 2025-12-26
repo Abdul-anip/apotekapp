@@ -294,6 +294,30 @@
 
  
 
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="modalHapus" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all">
+        <div class="p-6 text-center">
+            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Hapus Obat?</h3>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus obat "<span id="hapus_nama" class="font-semibold text-red-600"></span>"?</p>
+            <div class="flex gap-3">
+                <button onclick="closeModalHapus()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+                <a id="hapus_link" href="#" class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition font-semibold text-center">
+                    Ya, Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // Modal Functions (sama seperti sebelumnya)
 function openModalTambah() {
@@ -321,9 +345,13 @@ function closeModalEdit() {
 }
 
 function confirmDelete(id, nama) {
-    if (confirm(`Apakah Anda yakin ingin menghapus obat "${nama}"?`)) {
-        window.location.href = '<?= base_url('obat/delete') ?>/' + id;
-    }
+    document.getElementById('hapus_nama').textContent = nama;
+    document.getElementById('hapus_link').href = '<?= base_url('obat/delete') ?>/' + id;
+    document.getElementById('modalHapus').classList.remove('hidden');
+}
+
+function closeModalHapus() {
+    document.getElementById('modalHapus').classList.add('hidden');
 }
 
 // Search & Filter dengan Status Kadaluarsa
@@ -355,8 +383,60 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeModalTambah();
         closeModalEdit();
+        closeModalHapus();
     }
 });
+
+document.getElementById('modalHapus')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalHapus();
+});
 </script>
+
+
+<?php if (session()->getFlashdata('success') || session()->getFlashdata('error') || session()->getFlashdata('import_errors')) : ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMsg = <?= json_encode(session()->getFlashdata('success')) ?>;
+        const errorMsg = <?= json_encode(session()->getFlashdata('error')) ?>;
+        const importErrors = <?= json_encode(session()->getFlashdata('import_errors') ?? []) ?>;
+
+        if (successMsg) {
+            if (importErrors && importErrors.length > 0) {
+                // Success with warnings (Import partial)
+                let errorHtml = '<div class="text-left text-sm text-red-600 mt-2 bg-red-50 p-3 rounded max-h-40 overflow-y-auto"><ul class="list-disc pl-5">';
+                importErrors.forEach(err => {
+                    errorHtml += `<li>${err}</li>`;
+                });
+                errorHtml += '</ul></div>';
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Import Selesai dengan Catatan',
+                    html: `<p class="mb-2">${successMsg}</p>${errorHtml}`,
+                    confirmButtonText: 'Mengerti',
+                    confirmButtonColor: '#0d9488'
+                });
+            } else {
+                // Pure success
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: successMsg,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        } else if (errorMsg) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: errorMsg,
+                confirmButtonColor: '#ef4444'
+            });
+        }
+    });
+</script>
+<?php endif; ?>
 
 <?= $this->endSection() ?>

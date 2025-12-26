@@ -159,10 +159,10 @@
                                     class="bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition text-sm">
                                     Detail
                                 </a>
-                                <a href="/admin/penyakit/edit/<?= $p['id'] ?>" 
+                                <button onclick="openModalEdit(<?= $p['id'] ?>)" 
                                     class="bg-yellow-500 text-white px-3 py-1.5 rounded-lg hover:bg-yellow-600 transition text-sm">
                                     Edit
-                                </a>
+                                </button>
                                 <button onclick="confirmDelete(<?= $p['id'] ?>, '<?= esc($p['nama_penyakit']) ?>', <?= $p['jumlah_aturan'] ?>)" 
                                         class="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition text-sm">
                                     Hapus
@@ -298,6 +298,122 @@
         </form>
     </div>
 </div>
+</div>
+
+<div id="modalEdit" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-yellow-600 to-yellow-700 text-white p-4 rounded-t-lg flex justify-between items-center sticky top-0 z-10">
+            <h3 class="text-xl font-bold">Edit Penyakit</h3>
+            <button type="button" onclick="closeModalEdit()" class="text-white hover:text-gray-200 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <form id="formEdit" action="" method="post" class="p-6">
+            <?= csrf_field() ?>
+            
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Informasi Penyakit
+                </h4>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Kode Penyakit <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="kode_penyakit" id="edit_kode_penyakit" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 uppercase bg-gray-100"
+                                readonly>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Penyakit <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="nama_penyakit" id="edit_nama_penyakit" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
+                        <textarea name="deskripsi" id="edit_deskripsi" rows="3"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        Rekomendasi Obat
+                    </h4>
+                    <button type="button" onclick="addEditObatRow()" 
+                            class="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition text-sm flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Tambah
+                    </button>
+                </div>
+
+                <div id="editObatContainer" class="space-y-3">
+                    </div>
+
+                <div id="editEmptyState" class="text-center py-6 text-gray-500" style="display: none;">
+                    <p class="text-sm">Belum ada obat ditambahkan</p>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="submit" 
+                        class="flex-1 bg-yellow-600 text-white py-3 rounded-lg hover:bg-yellow-700 transition font-bold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                    </svg>
+                    Update Penyakit
+                </button>
+                <button type="button" onclick="closeModalEdit()" 
+                        class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-400 transition font-bold">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="modalHapus" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all">
+        <div class="p-6 text-center">
+            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Hapus Penyakit?</h3>
+            <p id="hapus_deskripsi" class="text-gray-600 mb-6"></p>
+            <div class="flex gap-3">
+                <button onclick="closeModalHapus()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Batal
+                </button>
+                <a id="hapus_link" href="#" class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition font-semibold text-center">
+                    Ya, Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 let obatRowIndex = 0;
@@ -313,6 +429,120 @@ function closeModalTambah() {
     document.getElementById('obatContainer').innerHTML = '';
     document.getElementById('emptyState').style.display = 'block';
     obatRowIndex = 0;
+}
+
+let editObatRowIndex = 0;
+
+function openModalEdit(id) {
+    // Show Loading or Skeleton if needed
+    fetch(`/admin/penyakit/detail/${id}?format=json`) // We use the new JSON format
+        .then(response => {
+            if (!response.ok) throw new Error('Gagal mengambil data');
+            return response.json();
+        })
+        .then(data => {
+            // Populate Form Fields
+            document.getElementById('edit_kode_penyakit').value = data.penyakit.kode_penyakit;
+            document.getElementById('edit_nama_penyakit').value = data.penyakit.nama_penyakit;
+            document.getElementById('edit_deskripsi').value = data.penyakit.deskripsi || '';
+            document.getElementById('formEdit').action = `/admin/penyakit/update/${id}`;
+            
+            // Clear existing rows in Edit Modal
+            const container = document.getElementById('editObatContainer');
+            container.innerHTML = '';
+            editObatRowIndex = 0;
+            
+            // Populate Recommendations
+            if (data.rekomendasi && data.rekomendasi.length > 0) {
+                 document.getElementById('editEmptyState').style.display = 'none';
+                 data.rekomendasi.forEach(rec => {
+                     addEditObatRow(rec.id_obat, rec.prioritas, rec.dosis_saran);
+                 });
+            } else {
+                document.getElementById('editEmptyState').style.display = 'block';
+            }
+            
+            // Show Modal
+            document.getElementById('modalEdit').classList.remove('hidden');
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Gagal mengambil data penyakit: ' + err.message);
+        });
+}
+
+
+function closeModalEdit() {
+    document.getElementById('modalEdit').classList.add('hidden');
+}
+
+function addEditObatRow(obatId = '', priority = '', dosage = '') {
+    const container = document.getElementById('editObatContainer');
+    const emptyState = document.getElementById('editEmptyState');
+    
+    editObatRowIndex++;
+    if (!priority) priority = editObatRowIndex;
+    
+    const row = document.createElement('div');
+    row.className = 'border-2 border-gray-200 rounded-lg p-4 hover:border-yellow-300 transition obat-row-edit';
+    row.id = 'obat-row-edit-' + editObatRowIndex;
+    
+    // Build Options (reusing global obatList)
+    const selectOptions = obatList.map(o => `
+        <option value="${o.id_obat}" ${o.id_obat == obatId ? 'selected' : ''}>
+            ${o.nama_obat} (${o.merk}) - Stok: ${o.stok}
+        </option>
+    `).join('');
+    
+    row.innerHTML = `
+        <div class="flex items-start gap-3">
+            <div class="flex-1 space-y-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Pilih Obat</label>
+                        <select name="obat_ids[]" required 
+                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-sm">
+                            <option value="">-- Pilih Obat --</option>
+                            ${selectOptions}
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Prioritas</label>
+                        <input type="number" name="priorities[]" value="${priority}" min="1" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-sm">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Dosis/Saran Penggunaan</label>
+                    <input type="text" name="dosages[]" value="${dosage || ''}"
+                            placeholder="Contoh: 3x sehari 1 tablet setelah makan"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-sm">
+                </div>
+            </div>
+            
+            <button type="button" onclick="removeEditObatRow(${editObatRowIndex})" 
+                    class="text-red-500 hover:text-red-700 p-2 mt-6 flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </button>
+        </div>
+    `;
+    
+    container.appendChild(row);
+    emptyState.style.display = 'none';
+}
+
+function removeEditObatRow(index) {
+    const row = document.getElementById('obat-row-edit-' + index);
+    if (row) row.remove();
+    
+    const container = document.getElementById('editObatContainer');
+    if (container.children.length === 0) {
+        document.getElementById('editEmptyState').style.display = 'block';
+    }
 }
 
 function addObatRow() {
@@ -407,15 +637,21 @@ function updatePriorities() {
 
 
 // Delete Function
+// Delete Function
 function confirmDelete(id, nama, jumlahAturan) {
-    let message = `Anda yakin ingin menghapus penyakit "${nama}"?`;
+    const desc = document.getElementById('hapus_deskripsi');
     if (jumlahAturan > 0) {
-        message += `\n\n⚠️ PERHATIAN: Penyakit ini memiliki ${jumlahAturan} aturan!\nSemua aturan dan rekomendasi obat terkait akan ikut terhapus.`;
+        desc.innerHTML = `Apakah Anda yakin ingin menghapus penyakit "<span class="font-semibold text-red-600">${nama}</span>"?<br><br><span class="text-red-600 font-bold">⚠️ PERHATIAN:</span> Penyakit ini memiliki <strong>${jumlahAturan} aturan</strong>!<br>Semua aturan dan rekomendasi obat terkait akan ikut terhapus.`;
+    } else {
+        desc.innerHTML = `Apakah Anda yakin ingin menghapus penyakit "<span class="font-semibold text-red-600">${nama}</span>"?`;
     }
     
-    if (confirm(message)) {
-        window.location.href = '/admin/penyakit/delete/' + id;
-    }
+    document.getElementById('hapus_link').href = '/admin/penyakit/delete/' + id;
+    document.getElementById('modalHapus').classList.remove('hidden');
+}
+
+function closeModalHapus() {
+    document.getElementById('modalHapus').classList.add('hidden');
 }
 
 document.getElementById('searchPenyakit')?.addEventListener('input', function(e) {
@@ -434,15 +670,27 @@ document.getElementById('searchPenyakit')?.addEventListener('input', function(e)
     });
 });
 
-document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeModalTambah();
+        closeModalEdit();
     }
 });
 
 document.getElementById('modalTambah')?.addEventListener('click', (e) => {
     if (e.target === e.currentTarget) {
         closeModalTambah();
+    }
+});
+
+document.getElementById('modalHapus')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModalHapus();
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModalTambah();
+        closeModalEdit();
+        closeModalHapus();
     }
 });
 
