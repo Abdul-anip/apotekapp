@@ -1,21 +1,28 @@
-# 💊 ApotekApp — Pharmacy Management System
+# ApotekApp — Pharmacy Management System
 
 > An MVC-based web application for managing pharmacy inventory, medicine categories, and cashier transactions.
 
 [![CodeIgniter](https://img.shields.io/badge/CodeIgniter%204-0A0A0A?style=flat-square&logo=codeigniter&logoColor=white)]()
 [![Tailwind](https://img.shields.io/badge/Tailwind%20CSS-0A0A0A?style=flat-square&logo=tailwindcss&logoColor=white)]()
 [![MySQL](https://img.shields.io/badge/MySQL-0A0A0A?style=flat-square&logo=mysql&logoColor=white)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-0A0A0A?style=flat-square)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-0A0A0A?style=flat-square)](LICENSE)
 
 ---
 
-## 📋 About The Project
+## About The Project
 
 ApotekApp is a comprehensive pharmacy management system built with CodeIgniter 4 following the MVC architecture. It helps pharmacy owners digitize their medicine inventory, track sales transactions, and manage product categories efficiently.
 
 ---
 
-## ✨ Features
+## Screenshots
+
+**Medicine Inventory**
+![Medicine Inventory](screenshots/inventory.jpg)
+
+---
+
+## Features
 
 - **Medicine Inventory** — Add, edit, delete, and view all medicines with stock levels
 - **Category Management** — Organize medicines by category with filtering
@@ -27,19 +34,41 @@ ApotekApp is a comprehensive pharmacy management system built with CodeIgniter 4
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |:---|:---|
 | Backend | CodeIgniter 4 (PHP 8) |
-| Frontend | Blade/CI Views, Alpine.js |
+| Frontend | CI Views + Alpine.js |
 | Styling | Tailwind CSS |
 | Database | MySQL |
 | Dev Tools | Composer, NPM |
 
 ---
 
-## 🚀 Getting Started
+## Folder Structure
+
+```
+apotekapp/
+├── app/
+│   ├── Controllers/        # MVC Controllers (Medicine, Category, Transaction)
+│   ├── Models/             # Database models with query builder
+│   ├── Views/              # PHP view templates
+│   │   ├── medicines/      # Medicine CRUD views
+│   │   ├── categories/     # Category management views
+│   │   └── transactions/   # Cashier & history views
+│   └── Config/             # App configuration files
+├── database/
+│   ├── migrations/         # DB schema migrations
+│   └── seeds/              # Database seeders
+├── public/                 # Entry point & static assets (CSS, JS, images)
+├── writable/               # Cache, logs, uploads
+└── screenshots/            # Project screenshots
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
@@ -92,38 +121,15 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ---
 
-## 📸 Screenshots
+## License
 
-> *(Add screenshots of the medicine inventory page, cashier view, and category management here)*
-
----
-
-## 📁 Folder Structure
-
-```
-apotekapp/
-├── app/
-│   ├── Controllers/    # MVC Controllers
-│   ├── Models/         # Database Models
-│   └── Views/          # Blade-like Views
-├── public/             # Static assets & entry point
-├── database/
-│   ├── migrations/     # DB schema migrations
-│   └── seeds/          # Seeder files
-└── writable/           # Cache, logs, uploads
-```
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
 
-## 📄 License
+## Author
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-## 👤 Author
-
-**Abdul Hanif** · D4 Software Engineering Technology, Politeknik Negeri Padang
+**Abdul Hanif** — D4 Software Engineering Technology, Politeknik Negeri Padang
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-0A0A0A?style=flat-square&logo=vercel&logoColor=white)](https://abdul-anip.github.io/CV/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A0A0A?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/abdul-hanif-78649b331)
