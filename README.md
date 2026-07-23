@@ -1,68 +1,129 @@
-# CodeIgniter 4 Application Starter
+# 💊 ApotekApp — Pharmacy Management System
 
-## What is CodeIgniter?
+> An MVC-based web application for managing pharmacy inventory, medicine categories, and cashier transactions.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+[![CodeIgniter](https://img.shields.io/badge/CodeIgniter%204-0A0A0A?style=flat-square&logo=codeigniter&logoColor=white)]()
+[![Tailwind](https://img.shields.io/badge/Tailwind%20CSS-0A0A0A?style=flat-square&logo=tailwindcss&logoColor=white)]()
+[![MySQL](https://img.shields.io/badge/MySQL-0A0A0A?style=flat-square&logo=mysql&logoColor=white)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-0A0A0A?style=flat-square)]()
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+---
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## 📋 About The Project
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+ApotekApp is a comprehensive pharmacy management system built with CodeIgniter 4 following the MVC architecture. It helps pharmacy owners digitize their medicine inventory, track sales transactions, and manage product categories efficiently.
 
-## Installation & updates
+---
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+## ✨ Features
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+- **Medicine Inventory** — Add, edit, delete, and view all medicines with stock levels
+- **Category Management** — Organize medicines by category with filtering
+- **Cashier & Transaction Module** — Record sales transactions with automatic stock deduction
+- **Transaction History** — View and filter past sales records
+- **User Authentication** — Secure login system
+- **Search & Filter** — Quickly find medicines by name or category
+- **Responsive UI** — Clean interface built with Tailwind CSS
 
-## Setup
+---
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## 🛠️ Tech Stack
 
-## Important Change with index.php
+| Layer | Technology |
+|:---|:---|
+| Backend | CodeIgniter 4 (PHP 8) |
+| Frontend | Blade/CI Views, Alpine.js |
+| Styling | Tailwind CSS |
+| Database | MySQL |
+| Dev Tools | Composer, NPM |
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+---
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+## 🚀 Getting Started
 
-**Please** read the user guide for a better explanation of how CI4 works!
+### Prerequisites
 
-## Repository Management
+- PHP 8.1+
+- Composer
+- Node.js 16+
+- MySQL 8.0+
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+### Installation
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+**1. Clone the repository**
+```bash
+git clone https://github.com/Abdul-anip/apotekapp.git
+cd apotekapp
+```
 
-## Server Requirements
+**2. Install PHP dependencies**
+```bash
+composer install
+```
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+**3. Environment setup**
+```bash
+cp env .env
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+**4. Configure database** in `.env`:
+```env
+database.default.hostname = localhost
+database.default.database = apotek_db
+database.default.username = root
+database.default.password = your_password
+database.default.DBDriver = MySQLi
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+**5. Run database migration**
+```bash
+php spark migrate
+php spark db:seed DatabaseSeeder
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+**6. Start the development server**
+```bash
+php spark serve
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+**7. Access the app**
+
+Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+---
+
+## 📸 Screenshots
+
+> *(Add screenshots of the medicine inventory page, cashier view, and category management here)*
+
+---
+
+## 📁 Folder Structure
+
+```
+apotekapp/
+├── app/
+│   ├── Controllers/    # MVC Controllers
+│   ├── Models/         # Database Models
+│   └── Views/          # Blade-like Views
+├── public/             # Static assets & entry point
+├── database/
+│   ├── migrations/     # DB schema migrations
+│   └── seeds/          # Seeder files
+└── writable/           # Cache, logs, uploads
+```
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## 👤 Author
+
+**Abdul Hanif** · D4 Software Engineering Technology, Politeknik Negeri Padang
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-0A0A0A?style=flat-square&logo=vercel&logoColor=white)](https://abdul-anip.github.io/CV/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A0A0A?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/abdul-hanif-78649b331)
